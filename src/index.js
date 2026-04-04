@@ -1,3 +1,5 @@
+import { Player} from "./player.js";
+
 const bgCanvas = document.querySelector('#bgCanvas');
 const canvas = document.querySelector('#mainCanvas');
 
@@ -16,7 +18,7 @@ function loadImage(src){
             console.log(`Image loaded successfully: ${src}`);//delete later
             resolve(img);
         })
-        img.addEventListener('error', (e) => {
+        img.addEventListener('error', () => {
             const error = new Error(`Image loaded failed: ${src}`);
             console.error(`Image loaded failed: ${src}`, error);
             reject(error)
@@ -59,10 +61,25 @@ function drawBackground(){
     bgCtx.drawImage(loadedAssets.bgImg, 0, 0, loadedAssets.bgImg.width, loadedAssets.bgImg.height - 100, 0, 0, cw, ch);
 }
 
+const keys = {};
+window.addEventListener('keydown', (e) => {
+    keys[e.code] = true;
+});
+window.addEventListener('keyup', (e) => {
+    keys[e.code] = false;
+})
+
+const player1 = new Player(300, 300, 5, {left: 'KeyA', right: 'KeyD', jump: 'KeyW'});
+const player2 = new Player(400, 300, 5, {left: 'ArrowLeft', right: 'ArrowRight', jump: 'ArrowUp'});
+
+
 function gameLoop(){
     requestAnimationFrame(gameLoop);
     ctx.clearRect(0, 0, cw, ch);
-    player1.draw();
+    player1.draw(ctx);
+    player1.update(keys, ch);
+    player2.draw(ctx);
+    player2.update(keys,ch);
 }
 window.addEventListener('resize', resize);
 
