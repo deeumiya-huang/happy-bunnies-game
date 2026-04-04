@@ -1,0 +1,16 @@
+# IDE - WebStorm / IntelliJ
+.idea/
+/shelf/
+/workspace.xml
+/queries/
+/dataSources/
+/dataSources.local.xml
+/httpRequests/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+
+# System file
+.DS_Store
