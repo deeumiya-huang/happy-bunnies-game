@@ -1,6 +1,6 @@
 import {canvas, ctx, POOL_SIZE} from "./config.js";
-import { Player} from "./player.js";
-import { GroundEnemy} from "./enemy.js";
+import { Player } from "./player.js";
+import { GroundEnemy, SkyEnemy } from "./enemy.js";
 
 const bgCanvas = document.querySelector('#bgCanvas');
 const bgCtx = bgCanvas.getContext('2d');
@@ -79,16 +79,23 @@ let player1;
 let player2;
 let groundEnemies = [];
 let skyEnemies = [];
+const allEnemies = [groundEnemies, skyEnemies];
+let levelSpeed = 2;
 function setupEntities() {
-    player1 = new Player(300, 300, 5, {left: 'KeyA', right: 'KeyD', jump: 'KeyW'});
-    player2 = new Player(400, 300, 5, {left: 'ArrowLeft', right: 'ArrowRight', jump: 'ArrowUp'});
+    player1 = new Player(300, 300, levelSpeed, {left: 'KeyA', right: 'KeyD', jump: 'KeyW'});
+    player2 = new Player(400, 300, levelSpeed, {left: 'ArrowLeft', right: 'ArrowRight', jump: 'ArrowUp'});
     for (let i = 0; i < POOL_SIZE; i++) {
-        let enemy = new GroundEnemy(5);
+        let enemy = new GroundEnemy(levelSpeed);
         enemy.active = false;
         groundEnemies.push(enemy);
     }
+    for (let i = 0; i < POOL_SIZE; i++) {
+        let enemy = new SkyEnemy(levelSpeed);
+        enemy.active = false;
+        skyEnemies.push(enemy);
+    }
 }
-function spawnEnemy() {
+function spawnGroundEnemy() {
     const enemy = groundEnemies.find(e => e.active === false);
     if (enemy){
         enemy.active = true;
@@ -96,18 +103,45 @@ function spawnEnemy() {
     }
 }
 
+function spawnSkyEnemy() {
+    const enemy = skyEnemies.find(e => e.active === false);
+    if (enemy){
+        enemy.active = true;
+        enemy.x = cw; // Enemy appear from right
+
+        // get those random feature back if we want to make this game more difficult
+        // enemy.baseY = Math.random() * 100 + 300; // randomize flight height
+        //
+        // // randomize initial angle so enemies don't wobble in the same way
+        // enemy.angle = Math.random() * Math.PI * 2;
+        //
+        // // randomize oscillation frequency and amplitude
+        // enemy.angleSpeed = 0.04 + Math.random() * 0.04;
+        // enemy.amplitude = 20 + Math.random() * 20;
+    }
+}
+
 let isGameRunning = true;
 // keep spawning enemy in random time between 1-3s until game stop
-function startSpawning() {
+function startSpawningGroundEnemy() {
     if (!isGameRunning){ return;}
     //1000 - 3000 ms
     const randomTime = Math.floor(Math.random() * 2000) + 1000;
     setTimeout(() => {
-        spawnEnemy();
-        startSpawning(); // recursive call for the next random interval
+        spawnGroundEnemy();
+        startSpawningGroundEnemy(); // recursive call for the next random interval
     }, randomTime);
 }
 
+function startSpawningSkyEnemy() {
+    if (!isGameRunning){ return;}
+    //1000 - 3000 ms
+    const randomTime = Math.floor(Math.random() * 2000) + 1000;
+    setTimeout(() => {
+        spawnSkyEnemy();
+        startSpawningSkyEnemy(); // recursive call for the next random interval
+    }, randomTime);
+}
 
 
 function gameLoop(){
@@ -117,13 +151,13 @@ function gameLoop(){
         player.update(keys);
         player.draw();
     })
-    groundEnemies
-        .filter(enemy => enemy.active)
-        .forEach(enemy => {
-            enemy.update();
-            enemy.draw();
-        })
-
+    allEnemies.forEach(pool =>{
+        pool.filter(enemy => enemy.active)
+            .forEach(enemy => {
+                enemy.update();
+                enemy.draw();
+            })
+    })
 }
 window.addEventListener('resize', resize);
 
@@ -132,7 +166,8 @@ initGame()
         isGameInitialized = true;
         resize(); // resize again to prevent needed variable in initGame in the future
         setupEntities(); // new all enemy after img loaded successfully
-        startSpawning(); // start generating enemy
+        startSpawningGroundEnemy(); // start generating enemy
+        startSpawningSkyEnemy();
         requestAnimationFrame(gameLoop);
         console.log(`game start!`);
     })

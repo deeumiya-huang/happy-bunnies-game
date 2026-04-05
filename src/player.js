@@ -6,7 +6,7 @@ export class Player extends Entity{
         super(speed);
         this.x = x;
         this.y = y;
-        this.jumpForce = 17;
+        this.jumpForce = 15;
         this.jumpCount = 0;
         this.controls = controls;
     }
@@ -28,9 +28,9 @@ export class Player extends Entity{
         if(keys[this.controls.jump]){
             this.jump();
             keys[this.controls.jump] = false;
-            if (this.dy < 0){
-                this.dy -= 0.3; //Reduce gravity
-            }
+            // if (this.dy < 0){
+            //     this.dy -= 0.2; //Reduce gravity
+            // }
         }
 
         this.dy += this.gravity;

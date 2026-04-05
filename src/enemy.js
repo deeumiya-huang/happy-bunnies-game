@@ -25,5 +25,23 @@ export class GroundEnemy extends Enemy {
         super(speed);
         this.y = ctx.canvas.height - this.height - this.ground;
     }
+}
 
+export class SkyEnemy extends Enemy {
+    constructor(speed) {
+        super(speed);
+        this.width = 60;
+        this.height = 30;
+        this.baseY = 350;
+        this.y = ctx.canvas.height - this.height - this.baseY;
+        this.amplitude = 30;
+        this.angle = 0;
+        this.angleSpeed = 0.05;
+    }
+
+    update() {
+        super.update();
+        this.angle += this.angleSpeed;
+        this.y = this.baseY + Math.sin(this.angle)* this.amplitude;
+    }
 }
