@@ -77,9 +77,9 @@ function gameLoop(){
     requestAnimationFrame(gameLoop);
     ctx.clearRect(0, 0, cw, ch);
     player1.draw(ctx);
-    player1.update(keys, ch);
+    player1.update(keys, cw, ch);
     player2.draw(ctx);
-    player2.update(keys,ch);
+    player2.update(keys,cw, ch);
 }
 window.addEventListener('resize', resize);
 
