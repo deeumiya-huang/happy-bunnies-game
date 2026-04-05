@@ -9,6 +9,7 @@ export class Player extends Entity{
         this.jumpForce = 15;
         this.jumpCount = 0;
         this.controls = controls;
+        this.onGround = false;
     }
 
     draw() {
@@ -22,26 +23,43 @@ export class Player extends Entity{
         }
     }
     update(keys) {
-        this.dx = 0;
+        this.dx = 0; // reset dx each frame
         if(keys[this.controls.left]){this.dx -= this.speed;}
         if(keys[this.controls.right]){this.dx += this.speed;}
         if(keys[this.controls.jump]){
             this.jump();
             keys[this.controls.jump] = false;
-            // if (this.dy < 0){
-            //     this.dy -= 0.2; //Reduce gravity
-            // }
+            if (this.dy < 0){
+                this.dy -= 0.2; //Reduce gravity
+            }
         }
 
-        this.dy += this.gravity;
+        //---- Gravity handling ----
+        let currentGravity = this.gravity;
+        // Reduce gravity when the character is near the apex (dy close to 0) to create a "hang time" effect
+        if (Math.abs(this.dy) < 2) {
+            currentGravity = this.gravity * 0.5; // Halve the gravity
+        }
+        // only add gravity when the character in the air
+        if (!this.onGround) {
+            this.dy += currentGravity;
+        }
+
         this.x += this.dx;
         this.y += this.dy;
-        // when falling on the ground
-        if(this.y + this.height > ctx.canvas.height - this.ground){
-            this.y = ctx.canvas.height - this.height - this.ground;
+
+        // ground collision detection
+        const groundY = ctx.canvas.height - this.height - this.ground;
+
+        if (this.y >= groundY) {
+            this.onGround = true;
+            this.y = groundY;
             this.dy = 0;
-            this.jumpCount = 0; //reset jumping times
+            this.jumpCount = 0; // reset jumpinf times
+        } else {
+            this.onGround = false;
         }
+
         // when hitting the wall
         if (this.x < 0 ){
             this.x = 0;
