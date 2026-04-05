@@ -1,20 +1,17 @@
-export class Player{
+import {ctx} from "./config.js";
+import {Entity} from "./entity.js";
+
+export class Player extends Entity{
     constructor(x, y, speed, controls) {
+        super(speed);
         this.x = x;
         this.y = y;
-        this.width = 50;
-        this.height = 80;
-        this.dx = 0;
-        this.dy = 0;
-        this.speed = speed;
         this.jumpForce = 17;
-        this.gravity = 0.6;
         this.jumpCount = 0;
         this.controls = controls;
-        this.ground = 125;
     }
 
-    draw(ctx) {
+    draw() {
         ctx.fillStyle = 'red';
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }
@@ -24,7 +21,7 @@ export class Player{
             this.jumpCount++;
         }
     }
-    update(keys, cw, ch) {
+    update(keys) {
         this.dx = 0;
         if(keys[this.controls.left]){this.dx -= this.speed;}
         if(keys[this.controls.right]){this.dx += this.speed;}
@@ -40,8 +37,8 @@ export class Player{
         this.x += this.dx;
         this.y += this.dy;
         // when falling on the ground
-        if(this.y + this.height > ch - this.ground){
-            this.y = ch - this.height - this.ground;
+        if(this.y + this.height > ctx.canvas.height - this.ground){
+            this.y = ctx.canvas.height - this.height - this.ground;
             this.dy = 0;
             this.jumpCount = 0; //reset jumping times
         }
@@ -49,8 +46,8 @@ export class Player{
         if (this.x < 0 ){
             this.x = 0;
             this.dx = 0;
-        } else if ( this.x + this.width > cw) {
-            this.x = cw - this.width;
+        } else if ( this.x + this.width > ctx.canvas.width) {
+            this.x = ctx.canvas.width - this.width;
             this.dx = 0;
         }
     }
