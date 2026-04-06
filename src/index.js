@@ -157,7 +157,7 @@ function updateEnemyCollision() {
     players.forEach(p => {
         allEnemies.forEach(pool => {
             pool.forEach(e => {
-                if (e.active && checkCollision(p, e)) {
+                if (e.active && checkCollision(p.getHitbox(), e.getHitbox())) {
                     // gameOver();
                     e.isHit = true;
                 }
@@ -203,7 +203,7 @@ function gameLoop(){
                 enemy.draw();
             });
     });
-    [player1, player2].forEach(player => {player.draw()})
+    [player1, player2].forEach(player => {player.draw()}) // player draw after enemy to prevent block by enemy
 }
 window.addEventListener('resize', resize);
 
