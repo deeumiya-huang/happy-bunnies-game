@@ -103,7 +103,7 @@ export class Player extends Entity{
             } else {
                 this.facing = 0;
             }
-            this.updateWalkAnimation(); // 處理 1, 2 切換
+            this.updateMoveAnimation(); // 處理 1, 2 切換
         } else {
             this.state = 'stop';
             this.facing = 0;

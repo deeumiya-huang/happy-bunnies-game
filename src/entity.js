@@ -36,7 +36,7 @@ export class Entity{
             height: this.height - this.padding * 2
         }
     }
-    updateWalkAnimation() {
+    updateMoveAnimation() {
         this.frameTimer++; //keep adding 1 each frame and reset to 0 every 10 frames
         if (this.frameTimer > 10) {
             this.moveFrame = this.moveFrame === 1 ? 2 : 1;

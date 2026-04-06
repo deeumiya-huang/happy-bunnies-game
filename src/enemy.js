@@ -1,5 +1,6 @@
 import {ctx} from "./config.js";
 import {Entity} from "./entity.js";
+import {loadedAssets} from "./index.js";
 
 class Enemy extends Entity{
     constructor(speed) {
@@ -25,7 +26,21 @@ export class GroundEnemy extends Enemy {
         super(speed);
         this.y = ctx.canvas.height - this.height - this.ground;
     }
-
+    draw(){
+        this.updateMoveAnimation()
+        let spriteName = '';
+        if (this.moveFrame === 1) {
+            spriteName = `spikeMan_walk2.png`; //change between stand and walk
+        } else {
+            spriteName = `spikeMan_stand.png`;
+        }
+        const s = loadedAssets.atlas[spriteName];
+        ctx.save();
+        ctx.translate(this.x + this.width, this.y);
+        ctx.scale(-1, 1);
+        ctx.drawImage(loadedAssets.spriteSheet, s.x, s.y, s.width, s.height, 0, 0, this.width, this.height);
+        ctx.restore();
+    }
 }
 
 export class SkyEnemy extends Enemy {
@@ -39,7 +54,18 @@ export class SkyEnemy extends Enemy {
         this.angle = 0;
         this.angleSpeed = 0.05;
     }
+    draw() {
+        this.updateMoveAnimation()
+        let spriteName = '';
+        if (this.moveFrame === 1) {
+            spriteName = `wingMan3.png`;
+        } else {
+            spriteName = `wingMan4.png`;
+        }
+        const s = loadedAssets.atlas[spriteName];
+        ctx.drawImage(loadedAssets.spriteSheet, s.x, s.y, s.width, s.height, this.x, this.y, this.width, this.height);
 
+    }
     update() {
         super.update();
         this.angle += this.angleSpeed;
