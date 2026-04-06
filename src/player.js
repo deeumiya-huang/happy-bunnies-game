@@ -1,25 +1,43 @@
-import {ctx} from "./config.js";
-import {Entity} from "./entity.js";
+import { ctx } from "./config.js";
+import { Entity } from "./entity.js";
+import { loadedAssets } from "./index.js";
 
 export class Player extends Entity{
-    constructor(x, y, speed, controls) {
+    constructor(playerNumber, x, y, speed, controls) {
         super(speed);
+        this.playerNumber = playerNumber;
         this.x = x;
         this.y = y;
         this.jumpForce = 15;
         this.jumpCount = 0;
         this.controls = controls;
         this.onGround = false;
+        this.facing = 0; // -1 represent walk left side
     }
 
     draw() {
-        ctx.fillStyle = 'red';
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-        // for hitbox test
-        ctx.strokeStyle = 'yellow';
-        ctx.lineWidth = 2;
-        const box = this.getHitbox();
-        ctx.strokeRect(box.x, box.y, box.width, box.height);
+        let spriteName = '';
+        if (this.state === 'jump') {
+            spriteName = `bunny${this.playerNumber}_jump.png`;
+        } else if (this.state === 'walk') {
+            spriteName = `bunny${this.playerNumber}_walk${this.moveFrame}.png`; //change between walk1 and walk2
+        } else {
+            spriteName = `bunny${this.playerNumber}_stand.png`;
+        }
+        const s = loadedAssets.atlas[spriteName];
+        // use ctx.scale to chanhe image direction when walking to left side
+        ctx.save();
+        if (this.facing === -1) {
+            ctx.translate(this.x + this.width, this.y);
+            ctx.scale(-1, 1);
+            ctx.drawImage(loadedAssets.spriteSheet, s.x, s.y, s.width, s.height, 0, 0, this.width, this.height);
+        } else if (!this.onGround){
+            ctx.drawImage(loadedAssets.spriteSheet, s.x, s.y, s.width, s.height, this.x - 5, this.y, this.width + 10, this.height - 6);
+        } else {
+            ctx.drawImage(loadedAssets.spriteSheet, s.x, s.y, s.width, s.height, this.x, this.y, this.width, this.height);
+        }
+        ctx.restore();
+
     }
     jump(){
         if(this.jumpCount < 2){
@@ -72,6 +90,23 @@ export class Player extends Entity{
         } else if ( this.x + this.width > ctx.canvas.width) {
             this.x = ctx.canvas.width - this.width;
             this.dx = 0;
+        }
+
+        // change the state for changing images
+        if (!this.onGround) {
+            this.state = 'jump';
+            this.facing = 0;
+        } else if (this.dx !== 0) {
+            this.state = 'walk';
+            if (this.dx < 0) {
+                this.facing = -1;
+            } else {
+                this.facing = 0;
+            }
+            this.updateWalkAnimation(); // 處理 1, 2 切換
+        } else {
+            this.state = 'stop';
+            this.facing = 0;
         }
     }
 

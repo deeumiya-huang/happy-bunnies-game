@@ -27,20 +27,22 @@ function loadImage(src){
     })
 }
 
-let loadedAssets = {}; // put successfully loaded images
+export let loadedAssets = {}; // put successfully loaded images
 
 async function initGame(){
     try {
-        const [bgImg, spriteSheet] = await Promise.all([
+        const [bgImg, spriteSheet, xmlString] = await Promise.all([
             loadImage(Assets.BACKGROUND),
-            loadImage(Assets.SPRITE_SHEET)
+            loadImage(Assets.SPRITE_SHEET),
+            loadAtlas('./assets/spritesheet_jumper.xml')
         ])
         loadedAssets.bgImg = bgImg;
         loadedAssets.spriteSheet = spriteSheet;
-        console.log(`all images loaded successfully, ready to start game!`);
+        loadedAssets.atlas = parseAtlasXML(xmlString);
+        console.log(`all images and xml files loaded successfully, ready to start game!`);
     } catch (error) {
         console.error(`game initialize failed:`, error);
-        alert(`please check images paths.`)
+        alert(`please check image and xml file paths.`)
     }
 }
 
@@ -82,8 +84,8 @@ let skyEnemies = [];
 const allEnemies = [groundEnemies, skyEnemies];
 let levelSpeed = 2;
 function setupEntities() {
-    player1 = new Player(300, 300, levelSpeed, {left: 'KeyA', right: 'KeyD', jump: 'KeyW'});
-    player2 = new Player(400, 300, levelSpeed, {left: 'ArrowLeft', right: 'ArrowRight', jump: 'ArrowUp'});
+    player1 = new Player(1,300, 300, levelSpeed, {left: 'KeyA', right: 'KeyD', jump: 'KeyW'});
+    player2 = new Player(2,400, 300, levelSpeed, {left: 'ArrowLeft', right: 'ArrowRight', jump: 'ArrowUp'});
     for (let i = 0; i < POOL_SIZE; i++) {
         let enemy = new GroundEnemy(levelSpeed);
         enemy.active = false;
@@ -180,6 +182,30 @@ function updatePlayerCollision() {
         player1.x += player1.dx;
         player2.x += player2.dx;
     }
+}
+// transfer xmlString to json Object
+function parseAtlasXML(xmlString) {
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+    const subTextures = xmlDoc.getElementsByTagName("SubTexture");
+    const atlas = {};
+    for (let subTexture of subTextures) {
+        const name = subTexture.getAttribute("name");
+        atlas[name] = {
+            x: parseInt(subTexture.getAttribute("x")),
+            y: parseInt(subTexture.getAttribute("y")),
+            width: parseInt(subTexture.getAttribute("width")),
+            height: parseInt(subTexture.getAttribute("height"))
+        };
+    }
+    return atlas;
+}
+
+async function loadAtlas(src) {
+    return fetch(src).then(response => {
+        if (!response.ok) throw new Error(`Failed to load: ${src}`);
+        return response.text();
+    });
 }
 
 function gameLoop(){

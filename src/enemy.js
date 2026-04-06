@@ -10,11 +10,6 @@ class Enemy extends Entity{
     draw(){
         ctx.fillStyle = this.isHit ?'green' : 'blue';
         ctx.fillRect(this.x, this.y, this.width, this.height);
-        // for hitbox test
-        ctx.strokeStyle = 'yellow';
-        ctx.lineWidth = 2;
-        const box = this.getHitbox();
-        ctx.strokeRect(box.x, box.y, box.width, box.height);
     }
     update(){
         if(!this.active){return;} // prevent calling enemy from somewhere other than initGame in the future
@@ -30,6 +25,7 @@ export class GroundEnemy extends Enemy {
         super(speed);
         this.y = ctx.canvas.height - this.height - this.ground;
     }
+
 }
 
 export class SkyEnemy extends Enemy {
