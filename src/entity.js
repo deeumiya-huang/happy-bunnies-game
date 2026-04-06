@@ -11,5 +11,16 @@ export class Entity{
         this.dy = 0;
         this.ground = GAME_SETTINGS.groundLevel;
         this.gravity = GAME_SETTINGS.gravity;
+        this.padding = 10; //change hitbox size
+        this.isHit = false;
+    }
+
+    getHitbox() {
+        return {
+            x: this.x + this.padding,
+            y: this.y + this.padding,
+            width: this.width - this.padding * 2,
+            height: this.height - this.padding * 2
+        }
     }
 }

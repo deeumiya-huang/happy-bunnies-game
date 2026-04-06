@@ -15,6 +15,11 @@ export class Player extends Entity{
     draw() {
         ctx.fillStyle = 'red';
         ctx.fillRect(this.x, this.y, this.width, this.height);
+        // for hitbox test
+        ctx.strokeStyle = 'yellow';
+        ctx.lineWidth = 2;
+        const box = this.getHitbox();
+        ctx.strokeRect(box.x, box.y, box.width, box.height);
     }
     jump(){
         if(this.jumpCount < 2){
@@ -55,7 +60,7 @@ export class Player extends Entity{
             this.onGround = true;
             this.y = groundY;
             this.dy = 0;
-            this.jumpCount = 0; // reset jumpinf times
+            this.jumpCount = 0; // reset jumping times
         } else {
             this.onGround = false;
         }

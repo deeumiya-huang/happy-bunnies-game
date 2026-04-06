@@ -143,21 +143,67 @@ function startSpawningSkyEnemy() {
     }, randomTime);
 }
 
+function checkCollision(rect1, rect2) {
+    return (
+        rect1.x  < rect2.x + rect2.width  &&
+        rect1.x + rect1.width > rect2.x &&
+        rect1.y < rect2.y + rect2.height &&
+        rect1.y + rect1.height > rect2.y
+    );
+}
+
+function updateEnemyCollision() {
+    const players = [player1, player2];
+    players.forEach(p => {
+        allEnemies.forEach(pool => {
+            pool.forEach(e => {
+                if (e.active && checkCollision(p, e)) {
+                    // gameOver();
+                    e.isHit = true;
+                }
+            })
+        })
+    })
+}
+function updatePlayerCollision() {
+    if (checkCollision(player1.getHitbox(), player2.getHitbox())) {
+        const bounce = 15; // Add some bounce when players collide
+
+        if (player1.x < player2.x) {
+            player1.dx = -bounce;
+            player2.dx = bounce;
+        } else {
+            player1.dx = bounce;
+            player2.dx = -bounce;
+        }
+
+        player1.x += player1.dx;
+        player2.x += player2.dx;
+    }
+}
 
 function gameLoop(){
-    requestAnimationFrame(gameLoop);
+    // put request in first order can prevent game shutdown just because one frame is broken
+    if (isGameRunning) {
+        requestAnimationFrame(gameLoop);
+    }
     ctx.clearRect(0, 0, cw, ch);
-    [player1, player2].forEach(player => {
-        player.update(keys);
-        player.draw();
-    })
+
+    [player1, player2].forEach(player => {player.update(keys)})
     allEnemies.forEach(pool =>{
         pool.filter(enemy => enemy.active)
-            .forEach(enemy => {
-                enemy.update();
-                enemy.draw();
-            })
+            .forEach(enemy => {enemy.update()})
     })
+    updateEnemyCollision();
+    updatePlayerCollision();
+
+    allEnemies.forEach(pool => {
+        pool.filter(enemy => enemy.active)
+            .forEach(enemy => {
+                enemy.draw();
+            });
+    });
+    [player1, player2].forEach(player => {player.draw()})
 }
 window.addEventListener('resize', resize);
 
@@ -172,4 +218,3 @@ initGame()
         console.log(`game start!`);
     })
     .catch((err) => console.error(`sth accidentally wrong!`, err));
-
