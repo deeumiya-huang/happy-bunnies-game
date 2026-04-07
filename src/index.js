@@ -8,7 +8,8 @@ const bgCtx = bgCanvas.getContext('2d');
 
 const Assets = {
     BACKGROUND: './assets/backgroundColorForest.png',
-    SPRITE_SHEET: './assets/spritesheet_jumper.png'
+    SPRITE_SHEET: './assets/spritesheet_jumper.png',
+    SPRITE_SHEET_XML: './assets/spritesheet_jumper.xml'
 };
 
 function loadImage(src){
@@ -28,13 +29,12 @@ function loadImage(src){
 }
 
 export let loadedAssets = {}; // put successfully loaded images
-
 async function initGame(){
     try {
         const [bgImg, spriteSheet, xmlString] = await Promise.all([
             loadImage(Assets.BACKGROUND),
             loadImage(Assets.SPRITE_SHEET),
-            loadAtlas('./assets/spritesheet_jumper.xml')
+            loadAtlas(Assets.SPRITE_SHEET_XML)
         ])
         loadedAssets.bgImg = bgImg;
         loadedAssets.spriteSheet = spriteSheet;
@@ -46,8 +46,7 @@ async function initGame(){
     }
 }
 
-let cw, ch;
-
+let cw, ch; // used in resize function
 function resize() {
     const {width, height} = bgCanvas.parentElement.getBoundingClientRect();
     [bgCanvas, canvas].forEach(c => {
@@ -104,7 +103,6 @@ function spawnGroundEnemy() {
         enemy.x = cw; // Enemy appear from right
     }
 }
-
 function spawnSkyEnemy() {
     const enemy = skyEnemies.find(e => e.active === false);
     if (enemy){
@@ -134,7 +132,6 @@ function startSpawningGroundEnemy() {
         startSpawningGroundEnemy(); // recursive call for the next random interval
     }, randomTime);
 }
-
 function startSpawningSkyEnemy() {
     if (!isGameRunning){ return;}
     //1000 - 3000 ms
