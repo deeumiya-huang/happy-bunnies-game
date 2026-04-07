@@ -5,12 +5,29 @@ import { GroundEnemy, SkyEnemy } from "./enemy.js";
 const bgCanvas = document.querySelector('#bgCanvas');
 const bgCtx = bgCanvas.getContext('2d');
 
+let isGameInitialized = false; // Whether resources are fully loaded (formerly isGameInitialized)
+let isGameStarted = false; // Whether the game has been started via click
+let isGameRunning = false;
+
+const startBtn = document.querySelector('#game-start');
+const pauseBtn = document.querySelector('#game-pause');
 
 const Assets = {
     BACKGROUND: './assets/backgroundColorForest.png',
     SPRITE_SHEET: './assets/spritesheet_jumper.png',
     SPRITE_SHEET_XML: './assets/spritesheet_jumper.xml'
 };
+const keys = {};
+window.addEventListener('keydown', (e) => {
+    keys[e.code] = true;
+    // Enter key pressed - triggering start button
+    if (e.code === 'Enter' && isGameInitialized && !isGameStarted) {startBtn.click();}
+    // P key pressed - triggering pause button
+    if (e.code === 'KeyP' && isGameStarted) {pauseBtn.click();}
+});
+window.addEventListener('keyup', (e) => {
+    keys[e.code] = false;
+})
 
 function loadImage(src){
     return new Promise((resolve, reject) =>{
@@ -46,34 +63,25 @@ async function initGame(){
     }
 }
 
-let cw, ch; // used in resize function
+// drawing background is included in resize function, consider carefully when modify resize function
 function resize() {
     const {width, height} = bgCanvas.parentElement.getBoundingClientRect();
     [bgCanvas, canvas].forEach(c => {
         c.width = width;
-        c.height =height;
+        c.height = height;
     });
-    cw = canvas.width;
-    ch = canvas.height;
     if (isGameInitialized){
         drawBackground();
     }
-
 }
-let isGameInitialized = false;
+
 resize(); // decide canvas' width and height first to let all the entity get correct x/y
 
 function drawBackground(){
-    bgCtx.drawImage(loadedAssets.bgImg, 0, 0, loadedAssets.bgImg.width, loadedAssets.bgImg.height - 100, 0, 0, cw, ch);
+    bgCtx.drawImage(loadedAssets.bgImg, 0, 0, loadedAssets.bgImg.width, loadedAssets.bgImg.height - 100, 0, 0, canvas.width, canvas.height);
 }
 
-const keys = {};
-window.addEventListener('keydown', (e) => {
-    keys[e.code] = true;
-});
-window.addEventListener('keyup', (e) => {
-    keys[e.code] = false;
-})
+
 
 
 let player1;
@@ -100,14 +108,14 @@ function spawnGroundEnemy() {
     const enemy = groundEnemies.find(e => e.active === false);
     if (enemy){
         enemy.active = true;
-        enemy.x = cw; // Enemy appear from right
+        enemy.x = canvas.width; // Enemy appear from right
     }
 }
 function spawnSkyEnemy() {
     const enemy = skyEnemies.find(e => e.active === false);
     if (enemy){
         enemy.active = true;
-        enemy.x = cw; // Enemy appear from right
+        enemy.x = canvas.width; // Enemy appear from right
 
         // get those random feature back if we want to make this game more difficult
         // enemy.baseY = Math.random() * 100 + 300; // randomize flight height
@@ -121,7 +129,7 @@ function spawnSkyEnemy() {
     }
 }
 
-let isGameRunning = true;
+
 // keep spawning enemy in random time between 1-3s until game stop
 function startSpawningGroundEnemy() {
     if (!isGameRunning){ return;}
@@ -207,10 +215,10 @@ async function loadAtlas(src) {
 
 function gameLoop(){
     // put request in first order can prevent game shutdown just because one frame is broken
-    if (isGameRunning) {
-        requestAnimationFrame(gameLoop);
-    }
-    ctx.clearRect(0, 0, cw, ch);
+    if (!isGameRunning) {return;}
+    requestAnimationFrame(gameLoop);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     [player1, player2].forEach(player => {player.update(keys)})
     allEnemies.forEach(pool =>{
@@ -230,14 +238,47 @@ function gameLoop(){
 }
 window.addEventListener('resize', resize);
 
+// --- Initial Load (Executes on page load to display the background) ---
 initGame()
     .then(() => {
         isGameInitialized = true;
-        resize(); // resize again to prevent needed variable in initGame in the future
+
+        resize(); // resize again to prevent needed variable in initGame in the future also draw background
         setupEntities(); // new all enemy after img loaded successfully
-        startSpawningGroundEnemy(); // start generating enemy
-        startSpawningSkyEnemy();
-        requestAnimationFrame(gameLoop);
-        console.log(`game start!`);
+        console.log(`game initialize!`);
     })
     .catch((err) => console.error(`sth accidentally wrong!`, err));
+
+// --- Start Button Logic ---
+startBtn.addEventListener('click', () => {
+    if (!isGameInitialized || isGameStarted) return;// If resources aren't ready yet, or if the game has already started, do nothing
+    isGameStarted = true; // Mark as started
+    isGameRunning = true; // Mark as running
+
+    startBtn.style.display = 'none';
+    pauseBtn.style.display = 'inline-block';
+
+    // Start game loop and enemy spawning
+    startSpawningGroundEnemy();
+    startSpawningSkyEnemy();
+    requestAnimationFrame(gameLoop);
+
+    console.log("Game Started!");
+});
+
+//--- Pause/Resume Button Logic ---
+pauseBtn.addEventListener('click', () => {
+    if (!isGameStarted) return;
+
+    isGameRunning = !isGameRunning; // Toggle running state
+
+    if (isGameRunning) {
+        pauseBtn.innerText = "Pause";
+        // Restart all interrupted loops/cycles
+        requestAnimationFrame(gameLoop);
+        startSpawningGroundEnemy();
+        startSpawningSkyEnemy();
+    } else {
+        pauseBtn.innerText = "Resume";
+    }
+});
