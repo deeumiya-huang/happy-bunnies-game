@@ -16,6 +16,8 @@ export class Entity{
         this.state = 'stop'; // condition：stop, walk, jump, hurt
         this.moveFrame = 1; // move frame: 1 or 2
         this.frameTimer = 0; // to control the speed of changing move images
+        this.active = false;
+        this.alpha = 1; // 0 for transparent
     }
     draw() {
         // // test rectangle

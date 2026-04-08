@@ -27,6 +27,7 @@ export class GroundEnemy extends Enemy {
         this.y = ctx.canvas.height - this.height - this.ground;
     }
     draw(){
+        if(!this.active){return;}
         this.updateMoveAnimation()
         let spriteName = '';
         if (this.moveFrame === 1) {
@@ -55,6 +56,7 @@ export class SkyEnemy extends Enemy {
         this.angleSpeed = 0.05;
     }
     draw() {
+        if(!this.active){return;}
         this.updateMoveAnimation()
         let spriteName = '';
         if (this.moveFrame === 1) {

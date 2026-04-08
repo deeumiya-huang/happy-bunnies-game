@@ -7,3 +7,10 @@ export const GAME_SETTINGS = {
 };
 
 export const POOL_SIZE = 10;
+export const LEVELS = {
+    level1: { playerSpeed: 2, enemySpeed: 1, spawnGroundTime: 4000, spawnSkyTime: 4000},
+    level2: {},
+    level3: {},
+    level4: {},
+    level5: {}
+}

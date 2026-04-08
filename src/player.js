@@ -12,21 +12,29 @@ export class Player extends Entity{
         this.jumpCount = 0;
         this.controls = controls;
         this.onGround = false;
+        this.isInvincible = false;
+        this.isInvincibilityTimer = 0;
         this.facing = 0; // -1 represent walk left side
+        this.deathCounter = 0; //to play death animation after the player death
+        this.animationFinished = false;
     }
 
     draw() {
+        if (!this.active) return;
         let spriteName = '';
         if (this.state === 'jump') {
             spriteName = `bunny${this.playerNumber}_jump.png`;
         } else if (this.state === 'walk') {
             spriteName = `bunny${this.playerNumber}_walk${this.moveFrame}.png`; //change between walk1 and walk2
+        } else if (this.state === 'hurt'){
+            spriteName = `bunny${this.playerNumber}_hurt.png`;
         } else {
             spriteName = `bunny${this.playerNumber}_stand.png`;
         }
         const s = loadedAssets.atlas[spriteName];
         // use ctx.scale to chanhe image direction when walking to left side
         ctx.save();
+        ctx.globalAlpha = this.alpha; // make the player blinking when hurt
         if (this.facing === -1) {
             ctx.translate(this.x + this.width, this.y);
             ctx.scale(-1, 1);
@@ -47,6 +55,27 @@ export class Player extends Entity{
     }
     update(keys) {
         this.dx = 0; // reset dx each frame
+        if (this.state === 'hurt') {
+            this.onGround = false;
+            this.dy += this.gravity / 3; // divided by 3 to make the animation slower
+            this.y += this.dy;
+            this.deathCounter++;
+            this.alpha = 0.6 + Math.sin(this.deathCounter * 0.5) * 0.4; // make alpha between 0.2 - 1
+            if (this.deathCounter > 300) {
+                this.animationFinished = true;
+                this.alpha = 1;
+            }
+            return; // skip the movement logic so that player can fall off the screen
+        }
+        if (this.isInvincible) {
+            this.invincibilityTimer--;
+            this.alpha = 0.7;
+
+            if (this.invincibilityTimer <= 0) {
+                this.isInvincible = false;
+                this.alpha = 1;
+            }
+        }
         if(keys[this.controls.left]){this.dx -= this.speed;}
         if(keys[this.controls.right]){this.dx += this.speed;}
         if(keys[this.controls.jump]){
