@@ -11,6 +11,8 @@ let isGameRunning = false;
 
 const startBtn = document.querySelector('#game-start');
 const pauseBtn = document.querySelector('#game-pause');
+const player1Lives = document.querySelector('#player1-lives');
+const player2Lives = document.querySelector('#player2-lives');
 
 const Assets = {
     BACKGROUND: './assets/backgroundColorForest.png',
@@ -29,6 +31,8 @@ const allEnemies = [groundEnemies, skyEnemies];
 let level = 1;
 let playerSpeed = 1 + level;
 let enemySpeed = level;
+
+let winnerTimer = null; // to reset life after the winner comes out
 
 window.addEventListener('keydown', (e) => {
     keys[e.code] = true;
@@ -167,13 +171,48 @@ function updateEnemyCollision() {
                 if (e.active && checkCollision(p.getHitbox(), e.getHitbox())) {
                     // gameOver();
                     p.isHit = true;
+                    p.remainingLives -= 1;
+                    reduceLife(`#player${p.playerNumber}-lives`);
                     p.state = 'hurt';
                     p.dy = -10;
                     setOthersInvincible(p);
+                    if (p.remainingLives === 0) {
+                        showWinner(p);
+                    }
                 }
             })
         })
     })
+}
+function showWinner(Loser) {
+    if (Loser.playerNumber === 1) {
+        console.log('player2 wins!')
+    } else {
+        console.log('player1 wins!')
+    }
+    winnerTimer = setTimeout(resetLife, 3000);
+}
+
+function resetLife() {
+    player1.remainingLives = 3;
+    player2.remainingLives = 3;
+    const containers = document.querySelectorAll('.player-lives');
+    containers.forEach(container => {
+        while (container.children.length < 3) {
+            const life = document.createElement('img');
+            life.src = 'assets/carrots.png';
+            life.alt = 'player lives pattern';
+            container.appendChild(life);
+        }
+    })
+}
+function reduceLife(playerId) {
+    const livesContainer = document.querySelector(playerId);
+
+    // Check if the container has any images left to avoid errors
+    if (livesContainer.lastElementChild) {
+        livesContainer.removeChild(livesContainer.lastElementChild);
+    }
 }
 function setOthersInvincible(hitPlayer) {
     const players = [player1, player2];
@@ -213,7 +252,10 @@ function resetPlayers() {
 
     players.forEach((p, index) => {
         p.isHit = false;
+        p.isInvincible = false;
         p.animationFinished = false; // reset game over animation
+        p.invincibilityTimer = 0;
+        p.alpha = 1;
         p.state = 'stop';            // back to stand position
         p.deathCounter = 0;          // reset timer
 
@@ -303,6 +345,7 @@ initGame()
 
 // --- Start Button Logic ---
 startBtn.addEventListener('click', () => {
+    if (winnerTimer) clearTimeout(winnerTimer);
     if (!isGameInitialized || isGameStarted) return;// If resources aren't ready yet, or if the game has already started, do nothing
 
     isGameStarted = true; // Mark as started

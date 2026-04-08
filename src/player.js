@@ -13,10 +13,11 @@ export class Player extends Entity{
         this.controls = controls;
         this.onGround = false;
         this.isInvincible = false;
-        this.isInvincibilityTimer = 0;
+        this.invincibilityTimer = 0;
         this.facing = 0; // -1 represent walk left side
         this.deathCounter = 0; //to play death animation after the player death
         this.animationFinished = false;
+        this.remainingLives = 3;
     }
 
     draw() {
