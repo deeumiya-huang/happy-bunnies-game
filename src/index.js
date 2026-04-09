@@ -35,7 +35,13 @@ let enemySpeed = level;
 let winnerTimer = null; // to reset life after the winner comes out
 
 window.addEventListener('keydown', (e) => {
+    // List of keys that trigger page scrolling
+    const keysToBlock = ["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
     keys[e.code] = true;
+    if (isGameRunning && keysToBlock.includes(e.code)) {
+        // Prevent the default browser scrolling behavior when playing game
+        e.preventDefault();
+    }
     // Enter key pressed - triggering start button
     if (e.code === 'Enter' && isGameInitialized && !isGameStarted) {startBtn.click();}
     // P key pressed - triggering pause button
