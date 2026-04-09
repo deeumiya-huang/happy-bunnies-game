@@ -10,15 +10,49 @@ body {
     background-color: #f4f4f4;
     color: #333;
 }
+.header-container {
+    background-color: #ff8c32;
+    color: #efebe9;
+    padding: 20px 40px;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    border-bottom: 10px solid #e67616;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+}
 
-.main-container{
-    position: relative;
+.page-title {
+    grid-column: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex: 0 0 auto;
+}
+nav {
+    justify-self: end;
+}
+
+.nav-links a {
+    color: #669e35; /* Grass Green */
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.nav-links a:hover {
+    color: #a2d178;
+    text-decoration: underline;
 }
 .title {
     font-family: "Barriecito", system-ui;
+    font-size: 3.2rem;
     font-weight: 500;
     font-style: normal;
 }
+.main-container{
+    position: relative;
+}
+
 #background-img {
     position: absolute;
     width: 100%;
