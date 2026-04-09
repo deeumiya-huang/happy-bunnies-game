@@ -11,9 +11,7 @@ let isGameRunning = false;
 
 const startBtn = document.querySelector('#game-start');
 const pauseBtn = document.querySelector('#game-pause');
-const player1Lives = document.querySelector('#player1-lives');
-const player2Lives = document.querySelector('#player2-lives');
-
+const gameBoard = document.querySelector('#game-board');
 const Assets = {
     BACKGROUND: './assets/backgroundColorForest.png',
     SPRITE_SHEET: './assets/spritesheet_jumper.png',
@@ -241,7 +239,7 @@ function gameOver() {
     })
     //reset players back, and take start button back
     resetPlayers();
-    startBtn.style.display = 'inline-block';
+    gameBoard.style.display = 'inline-block';
     pauseBtn.style.display = 'none';
     pauseBtn.innerText = "Pause";
 
@@ -359,7 +357,7 @@ startBtn.addEventListener('click', () => {
 
     player1.active = true;
     player2.active = true;
-    startBtn.style.display = 'none';
+    gameBoard.style.display = 'none';
     pauseBtn.style.display = 'inline-block';
 
     // Start game loop and enemy spawning

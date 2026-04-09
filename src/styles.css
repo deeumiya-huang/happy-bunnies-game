@@ -5,15 +5,96 @@
 }
 body {
     min-height: 100vh;
-    line-height: 1.5;
+    line-height: 1.6;
     font-family: sans-serif;
-    border: 1px solid black;
-}
-img, picture, video, canvas, svg {
-    display: block;
-    max-width: 100%;
+    background-color: #f4f4f4;
+    color: #333;
 }
 
+.main-container{
+    position: relative;
+}
+.title {
+    font-family: "Barriecito", system-ui;
+    font-weight: 500;
+    font-style: normal;
+}
+#background-img {
+    position: absolute;
+    width: 100%;
+    height: 110%;
+    top: 0;
+    object-fit: fill;
+    opacity: 0.6;
+    z-index: 1;
+
+}
+.subcontainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+#left-bunny, #right-bunny {
+    flex: 1;
+    align-self: flex-end;
+    width: 100%;
+    height: 100%;
+    object-position: center bottom;
+    z-index:3;
+}
+#game-container {
+    flex: 6;
+    position: relative;
+}
+.game-items {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+/* ---Game Board Style--- */
+#game-board {
+    align-self: center;
+
+    background-color: rgba(255, 255, 255, 0.9); /* Translucent white background */
+    border: 8px solid #8d5524; /* Woody dark brown border */
+    border-radius: 30px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);/* Floating shadow effect */
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    max-width: 400px;
+}
+
+.game-hint {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    font-size: 1.1rem;
+    color: #5d4037;
+    margin-bottom: 10px;
+    font-weight: bold;
+    animation: bounceText 2s infinite ease-in-out;
+}
+
+/* Hint Text Animation */
+@keyframes bounceText {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+/* ---Canvas Style--- */
 .canvas-wrapper{
     position: relative;
     width: 100%;
@@ -32,4 +113,123 @@ img, picture, video, canvas, svg {
     width: 100%;
     height: 100%;
     z-index: 2;
+}
+/* ---Button Style--- */
+.btn {
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    color: white;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
+    transition: all 0.1s ease;
+    position: relative;
+}
+
+.btn-start {
+    background-color: #ff8c32;
+    border: 3px solid #e67616;
+}
+
+.btn-start:hover {
+    background-color: #ffa35c;
+    transform: translateY(-2px); /* Lift up slightly on hover */
+    box-shadow: 0 8px 0 rgba(0, 0, 0, 0.15);
+}
+
+.btn-pause {
+    background-color: #88c057;
+    border: 3px solid #6fa344;
+    display: none; /*show up when game start */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 20px;
+    z-index: 2;
+}
+
+.btn-pause:hover {
+    background-color: #a2d178;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Click Effect (Pressed-down feel) */
+.btn:active {
+    transform: translateY(4px); /* Move down when clicked */
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);/* Shrink shadow */
+}
+
+
+/* ---Footer Main Container--- */
+.game-footer {
+    background-color: #3e2723; /* Dark brown to match the theme */
+    color: #efebe9;
+    padding: 90px 0 20px;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    border-top: 5px solid #8d5524; /* A wooden-style top border */
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+    gap: 30px;
+}
+
+/* Individual Sections */
+.footer-section {
+    flex: 1;
+    min-width: 250px;
+}
+
+.footer-section h3, .footer-section h4 {
+    color: #ff8c32; /* Carrot Orange */
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.footer-logo {
+    font-size: 1.8rem;
+}
+
+/* Credit List Styling */
+.credit-list {
+    list-style: none;
+    padding: 0;
+}
+
+.credit-list li {
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+/* Link Hover Effects */
+.footer-section a {
+    color: #88c057; /* Grass Green */
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-section a:hover {
+    color: #a2d178;
+    text-decoration: underline;
+}
+
+/* Footer Bottom Bar */
+.footer-bottom {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.85rem;
+    color: #bdc3c7;
 }

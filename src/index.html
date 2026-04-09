@@ -2,31 +2,95 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Bunnies</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barriecito&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script type="module" src="index.js" defer></script>
 </head>
 <body>
-    <div class="canvas-wrapper">
-        <canvas id="bgCanvas"></canvas>
-        <canvas id="mainCanvas"></canvas>
-    </div>
+    <header class="header-container">
+        <div class="page-title">
+            <img class="bunny-img" src="assets/lifes.png" alt="rabbit pattern">
+            <h1 class="title">Happy Bunnies</h1>
+            <img class="bunny-img" src="assets/lifes.png" alt="rabbit pattern">
+        </div>
 
+        <nav>
+            <ul>
+                <li><a href="#" target="_blank">Story</a></li>
+                <li><a href="#" target="_blank">Play game</a></li>
+                <li><a href="#" target="_blank">Resource</a></li>
+                <li><a href="#" target="_blank">Contact us</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="main-container">
+        <img id="background-img" src="assets/backgroundColorForest.png" alt="background image">
+        <div class="subcontainer">
+            <img id="left-bunny" src="assets/bunny1_stand.png" alt="left bunny">
+            <section id="game-container">
+                <div class="canvas-wrapper">
+                    <canvas id="bgCanvas"></canvas>
+                    <canvas id="mainCanvas"></canvas>
+                </div>
+                <div class="game-items">
+                    <div class="player-lives" id="player1-lives">
+                        <img src="assets/carrots.png" alt="player lives pattern">
+                        <img src="assets/carrots.png" alt="player lives pattern">
+                        <img src="assets/carrots.png" alt="player lives pattern">
+                    </div>
+                    <div id="game-board">
+                        <p class="game-hint">click button or press enter to start game</p>
+                        <button class="btn btn-start" id="game-start">Start!</button>
+                    </div>
+                    <div class="player-lives" id="player2-lives">
+                        <img src="assets/carrots.png" alt="player lives pattern">
+                        <img src="assets/carrots.png" alt="player lives pattern">
+                        <img src="assets/carrots.png" alt="player lives pattern">
+                    </div>
+                </div>
+                <button class="btn btn-pause" id="game-pause">pause</button>
+            </section>
+            <img id="right-bunny" src="assets/bunny2_stand.png" alt="right bunny">
+        </div>
+    </main>
 
-    <div class="player-lives" id="player1-lives">
-        <img src="assets/carrots.png" alt="player lives pattern">
-        <img src="assets/carrots.png" alt="player lives pattern">
-        <img src="assets/carrots.png" alt="player lives pattern">
-    </div>
-    <div>
-        <p>click button or press enter to start game</p>
-        <button id="game-start">Start!</button>
-        <button id="game-pause">pause</button>
-    </div>
-    <div class="player-lives" id="player2-lives">
-        <img src="assets/carrots.png" alt="player lives pattern">
-        <img src="assets/carrots.png" alt="player lives pattern">
-        <img src="assets/carrots.png" alt="player lives pattern">
-    </div>
+    <footer class="game-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3 class="footer-logo">Happy Bunnies</h3>
+                <p>Hop into the adventure!</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Game Credits</h4>
+                <ul class="credit-list">
+                    <li>
+                        Characters & Items:
+                        <a href="https://www.kenney.nl" target="_blank">Kenney (Jumper Pack)</a>
+                    </li>
+                    <li>
+                        Background Art:
+                        <a href="https://www.kenney.nl" target="_blank">Kenney (Background Elements)</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <span>🐰</span> <span>🥕</span> <span>🎮</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 Happy Bunnies. Built with Love & Carrots.</p>
+        </div>
+    </footer>
+
 </body>
 </html>
