@@ -172,22 +172,26 @@ function checkCollision(rect1, rect2) {
 
 function updateEnemyCollision() {
     const players = [player1, player2];
-    players.forEach(p => {
-        if (p.isHit || p.isInvincible) {return}
-        allEnemies.forEach(pool => {
-            pool.forEach(e => {
+    for (const p of players) {
+        // prevent redundant damage calculation
+        if (p.isHit || p.isInvincible || p.state === 'hurt') continue;
+
+        for (const pool of allEnemies) {
+            for (const e of pool) {
                 if (e.active && checkCollision(p.getHitbox(), e.getHitbox())) {
-                    // gameOver();
                     p.isHit = true;
                     p.remainingLives -= 1;
                     reduceLife(`#player${p.playerNumber}-lives`);
                     p.state = 'hurt';
                     p.dy = -10;
+
                     setOthersInvincible(p);
+                    // if anyone touched enemy, finished all the collision detection function immediately
+                    return;
                 }
-            })
-        })
-    })
+            }
+        }
+    }
 }
 function showWinner(Loser) {
     // gameBoard.style.display = 'flex';
