@@ -40,7 +40,7 @@ nav {
 }
 
 .nav-links a:hover {
-    color: #a2d178;
+    color: #91cc5c;
     text-decoration: underline;
 }
 .title {
@@ -119,15 +119,17 @@ nav {
     color: #5d4037;
     margin-bottom: 10px;
     font-weight: bold;
-    animation: bounceText 2s infinite ease-in-out;
+    animation: bounce 2s infinite ease-in-out;
 }
 
 /* Hint Text Animation */
-@keyframes bounceText {
+@keyframes bounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }
 }
-
+.winner-img {
+    animation: bounce 2s infinite ease-in-out;
+}
 /* ---Canvas Style--- */
 .canvas-wrapper{
     position: relative;

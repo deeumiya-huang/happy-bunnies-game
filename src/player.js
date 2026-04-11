@@ -60,7 +60,7 @@ export class Player extends Entity{
             this.onGround = false;
             this.dy += this.gravity / 3; // divided by 3 to make the animation slower
             this.y += this.dy;
-            this.deathCounter++;
+            this.deathCounter++; // Play death animation for 5s and game over
             this.alpha = 0.6 + Math.sin(this.deathCounter * 0.5) * 0.4; // make alpha between 0.2 - 1
             if (this.deathCounter > 300) {
                 this.animationFinished = true;
@@ -133,7 +133,7 @@ export class Player extends Entity{
             } else {
                 this.facing = 0;
             }
-            this.updateMoveAnimation(); // 處理 1, 2 切換
+            this.updateMoveAnimation(); // change images for movement
         } else {
             this.state = 'stop';
             this.facing = 0;

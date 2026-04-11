@@ -12,6 +12,10 @@ let isGameRunning = false;
 const startBtn = document.querySelector('#game-start');
 const pauseBtn = document.querySelector('#game-pause');
 const gameBoard = document.querySelector('#game-board');
+const gameHint = document.querySelector('.game-hint');
+let winnerImg = document.createElement('img');
+let winnerText = document.createElement('h3');
+
 const Assets = {
     BACKGROUND: './assets/backgroundColorForest.png',
     SPRITE_SHEET: './assets/spritesheet_jumper.png',
@@ -180,28 +184,43 @@ function updateEnemyCollision() {
                     p.state = 'hurt';
                     p.dy = -10;
                     setOthersInvincible(p);
-                    if (p.remainingLives === 0) {
-                        showWinner(p);
-                    }
                 }
             })
         })
     })
 }
 function showWinner(Loser) {
+    // gameBoard.style.display = 'flex';
+    gameHint.style.display = 'none';
+    winnerText.style.display = 'block';
+    winnerImg.style.display = 'block';
+
+    winnerText.textContent = 'Winner:';
+    winnerText.classList.add('game-hint');
+    winnerText.style.fontSize = '1.8rem';
     if (Loser.playerNumber === 1) {
         console.log('player2 wins!')
+        winnerImg.src = 'assets/bunny2_stand.png';
     } else {
-        console.log('player1 wins!')
+        console.log('player1 wins!');
+        winnerImg.src = 'assets/bunny1_stand.png';
     }
-    winnerTimer = setTimeout(resetLife, 3000);
+    winnerImg.classList.add('winner-img');
+    // prevent
+    if (!gameBoard.contains(winnerImg)) {
+        gameBoard.prepend(winnerImg);
+        gameBoard.prepend(winnerText);
+    }
+    isGameStarted = false;
+    startBtn.textContent = 'Play Again';
 }
 
 function resetLife() {
     player1.remainingLives = 3;
     player2.remainingLives = 3;
     const containers = document.querySelectorAll('.player-lives');
-    containers.forEach(container => {
+    containers.forEach(container =>
+    {
         while (container.children.length < 3) {
             const life = document.createElement('img');
             life.src = 'assets/carrots.png';
@@ -239,9 +258,20 @@ function gameOver() {
     })
     //reset players back, and take start button back
     resetPlayers();
-    gameBoard.style.display = 'inline-block';
+    gameBoard.style.display = 'flex';
     pauseBtn.style.display = 'none';
     pauseBtn.innerText = "Pause";
+    if (player1.remainingLives === 0) {
+        showWinner(player1);
+    } else if (player2.remainingLives === 0) {
+        showWinner(player2);
+    } else {
+        gameHint.style.display = 'block';
+        winnerImg.style.display = 'none';
+        winnerText.style.display = 'none';
+        startBtn.textContent = 'Start';
+    }
+
 
     console.log("Game Over - System Reset Ready");
 }
@@ -351,13 +381,16 @@ initGame()
 startBtn.addEventListener('click', () => {
     if (winnerTimer) clearTimeout(winnerTimer);
     if (!isGameInitialized || isGameStarted) return;// If resources aren't ready yet, or if the game has already started, do nothing
-
+    if (player1.remainingLives <= 0 || player2.remainingLives <= 0) {
+        resetLife();
+    }
     isGameStarted = true; // Mark as started
     isGameRunning = true; // Mark as running
 
     player1.active = true;
     player2.active = true;
     gameBoard.style.display = 'none';
+    gameHint.style.display = 'block';
     pauseBtn.style.display = 'inline-block';
 
     // Start game loop and enemy spawning
