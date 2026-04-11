@@ -32,7 +32,28 @@ body {
 nav {
     justify-self: end;
 }
+.nav-links {
+    list-style: none;
+    padding: 0;
+}
+nav li {
+    position: relative;
+    padding-left: 25px;
+}
+nav li::before {
+    content: ""; /* add image into the place later */
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
 
+    /* setting the image */
+    width: 20px;
+    height: 20px;
+    background-image: url('assets/carrots.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
 .nav-links a {
     color: #669e35; /* Grass Green */
     text-decoration: none;
