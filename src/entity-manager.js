@@ -1,6 +1,7 @@
 import {canvas, POOL_SIZE} from "./config.js";
 import { Player } from "./player.js";
 import { GroundEnemy, SkyEnemy } from "./enemy.js";
+import { Item } from "./item.js";
 
 export class EntityManager {
     constructor(level, game) {
@@ -10,9 +11,10 @@ export class EntityManager {
         this.groundEnemies = [];
         this.skyEnemies = [];
         this.allEnemies = [this.groundEnemies, this.skyEnemies];
+        this.items = [];
         this.level = level;
-        this.playerSpeed = 1 + this.level;
-        this.enemySpeed = this.level;
+        this.playerSpeed = 1 + this.level / 2;
+        this.enemySpeed = this.level / 2;
     }
 
     setup() {
@@ -21,6 +23,7 @@ export class EntityManager {
         for (let i = 0; i < POOL_SIZE; i++) {
             this.groundEnemies.push(new GroundEnemy(this.enemySpeed));
             this.skyEnemies.push(new SkyEnemy(this.enemySpeed));
+            this.items.push(new Item(this.playerSpeed));
         }
     }
     update(keys) {
@@ -29,8 +32,14 @@ export class EntityManager {
         this.allEnemies.forEach(pool =>{
             pool.forEach(enemy => {enemy.update()})
         })
+        this.items.forEach(item => {item.update()})
         this.updateEnemyCollision();
+        this.updateItemCollision();
         this.updatePlayerCollision();
+    }
+    levelUp() {
+        this.level++;
+        console.log(`Level Up! Current Level: ${this.level}`);
     }
     updateEnemyCollision() {
         const players = [this.player1, this.player2];
@@ -53,6 +62,18 @@ export class EntityManager {
                     }
                 }
             }
+        }
+    }
+    updateItemCollision() {
+        const players = [this.player1, this.player2];
+        for (const p of players) {
+
+            this.items.forEach(item => {
+                if (item.active && this.checkCollision(p.getHitbox(), item.getHitbox())) {
+                    p.score += 1;
+                    item.active = false;
+                }
+            })
         }
     }
     updatePlayerCollision() {
@@ -97,15 +118,18 @@ export class EntityManager {
                 enemy.draw();
             });
         });
+        this.items.forEach(item => {
+            item.draw();
+        });
         [this.player1, this.player2].forEach(player => {player.draw()}) // player draw after enemy to prevent block by enemy
 
     }
 
-    // keep spawning enemy in random time between 1-4s until game stop
+    // keep spawning enemy in random time between 2-5s until game stop
     startSpawningGroundEnemy() {
         if (!this.game.isRunning){ return;}
         //1000 - 4000 ms
-        const randomTime = Math.floor(Math.random() * 3000) + 1000;
+        const randomTime = Math.floor(Math.random() * 3000) + 2000;
         setTimeout(() => {
             this.spawnGroundEnemy();
             this.startSpawningGroundEnemy(); // recursive call for the next random interval
@@ -113,11 +137,19 @@ export class EntityManager {
     }
     startSpawningSkyEnemy() {
         if (!this.game.isRunning){ return;}
-        //1000 - 4000 ms
-        const randomTime = Math.floor(Math.random() * 3000) + 1000;
+        const randomTime = Math.floor(Math.random() * 3000) + 2000;
         setTimeout(() => {
             this.spawnSkyEnemy();
             this.startSpawningSkyEnemy(); // recursive call for the next random interval
+        }, randomTime);
+    }
+    startSpawningItem() {
+        if (!this.game.isRunning){ return;}
+        //1000 - 4000 ms
+        const randomTime = Math.floor(Math.random() * 3000) + 1000;
+        setTimeout(() => {
+            this.spawnItem();
+            this.startSpawningItem(); // recursive call for the next random interval
         }, randomTime);
     }
     spawnGroundEnemy() {
@@ -142,6 +174,14 @@ export class EntityManager {
             // // randomize oscillation frequency and amplitude
             // enemy.angleSpeed = 0.04 + Math.random() * 0.04;
             // enemy.amplitude = 20 + Math.random() * 20;
+        }
+    }
+    spawnItem() {
+        const item = this.items.find(e => e.active === false);
+        if (item){
+            item.active = true;
+            item.y = -50; // item appear from top
+            item.x = Math.random() * (canvas.width - item.width);
         }
     }
 }

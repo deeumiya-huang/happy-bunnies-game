@@ -60,6 +60,7 @@ export class Game {
         // Start game loop and enemy spawning
         this.entities.startSpawningGroundEnemy();
         this.entities.startSpawningSkyEnemy();
+        this.entities.startSpawningItem();
         this.loop();
     }
 
@@ -88,6 +89,7 @@ export class Game {
             requestAnimationFrame((time) => this.loop(time));
             this.entities.startSpawningGroundEnemy();
             this.entities.startSpawningSkyEnemy();
+            this.entities.startSpawningItem();
         }
     }
 
