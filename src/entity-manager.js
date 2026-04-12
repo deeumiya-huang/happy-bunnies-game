@@ -1,0 +1,147 @@
+import {canvas, POOL_SIZE} from "./config.js";
+import { Player } from "./player.js";
+import { GroundEnemy, SkyEnemy } from "./enemy.js";
+
+export class EntityManager {
+    constructor(level, game) {
+        this.game = game;
+        this.player1 = null;
+        this.player2 = null;
+        this.groundEnemies = [];
+        this.skyEnemies = [];
+        this.allEnemies = [this.groundEnemies, this.skyEnemies];
+        this.level = level;
+        this.playerSpeed = 1 + this.level;
+        this.enemySpeed = this.level;
+    }
+
+    setup() {
+        this.player1 = new Player(1,300, 300, this.playerSpeed, {left: 'KeyA', right: 'KeyD', jump: 'KeyW'});
+        this.player2 = new Player(2,400, 300, this.playerSpeed, {left: 'ArrowLeft', right: 'ArrowRight', jump: 'ArrowUp'});
+        for (let i = 0; i < POOL_SIZE; i++) {
+            this.groundEnemies.push(new GroundEnemy(this.enemySpeed));
+            this.skyEnemies.push(new SkyEnemy(this.enemySpeed));
+        }
+    }
+    update(keys) {
+        [this.player1, this.player2].forEach(player => {player.update(keys)})
+        if (this.player1.animationFinished || this.player2.animationFinished) {this.game.gameOver()}
+        this.allEnemies.forEach(pool =>{
+            pool.forEach(enemy => {enemy.update()})
+        })
+        this.updateEnemyCollision();
+        this.updatePlayerCollision();
+    }
+    updateEnemyCollision() {
+        const players = [this.player1, this.player2];
+        for (const p of players) {
+            // prevent redundant damage calculation
+            if (p.isHit || p.isInvincible || p.state === 'hurt') continue;
+
+            for (const pool of this.allEnemies) {
+                for (const e of pool) {
+                    if (e.active && this.checkCollision(p.getHitbox(), e.getHitbox())) {
+                        p.isHit = true;
+                        p.remainingLives -= 1;
+                        this.game.reduceLife(`#player${p.playerNumber}-lives`);
+                        p.state = 'hurt';
+                        p.dy = -10;
+
+                        this.setOthersInvincible(p);
+                        // if anyone touched enemy, finished all the collision detection function immediately
+                        return;
+                    }
+                }
+            }
+        }
+    }
+    updatePlayerCollision() {
+        if (this.checkCollision(this.player1.getHitbox(), this.player2.getHitbox())) {
+            const bounce = 15; // Add some bounce when players collide
+
+            if (this.player1.x < this.player2.x) {
+                this.player1.dx = -bounce;
+                this.player2.dx = bounce;
+            } else {
+                this.player1.dx = bounce;
+                this.player2.dx = -bounce;
+            }
+
+            this.player1.x += this.player1.dx;
+            this.player2.x += this.player2.dx;
+        }
+    }
+
+    checkCollision(rect1, rect2) {
+        return (
+            rect1.x  < rect2.x + rect2.width  &&
+            rect1.x + rect1.width > rect2.x &&
+            rect1.y < rect2.y + rect2.height &&
+            rect1.y + rect1.height > rect2.y
+        );
+    }
+
+    setOthersInvincible(hitPlayer) {
+        const players = [this.player1, this.player2];
+        players.forEach(p => {
+            if (p !== hitPlayer) {
+                p.isInvincible = true;
+                p.invincibilityTimer = 300;
+            }
+        });
+    }
+    
+    draw() {
+        this.allEnemies.forEach(pool => {
+            pool.forEach(enemy => {
+                enemy.draw();
+            });
+        });
+        [this.player1, this.player2].forEach(player => {player.draw()}) // player draw after enemy to prevent block by enemy
+
+    }
+
+    // keep spawning enemy in random time between 1-4s until game stop
+    startSpawningGroundEnemy() {
+        if (!this.game.isRunning){ return;}
+        //1000 - 4000 ms
+        const randomTime = Math.floor(Math.random() * 3000) + 1000;
+        setTimeout(() => {
+            this.spawnGroundEnemy();
+            this.startSpawningGroundEnemy(); // recursive call for the next random interval
+        }, randomTime);
+    }
+    startSpawningSkyEnemy() {
+        if (!this.game.isRunning){ return;}
+        //1000 - 4000 ms
+        const randomTime = Math.floor(Math.random() * 3000) + 1000;
+        setTimeout(() => {
+            this.spawnSkyEnemy();
+            this.startSpawningSkyEnemy(); // recursive call for the next random interval
+        }, randomTime);
+    }
+    spawnGroundEnemy() {
+        const enemy = this.groundEnemies.find(e => e.active === false);
+        if (enemy){
+            enemy.active = true;
+            enemy.x = canvas.width; // Enemy appear from right
+        }
+    }
+    spawnSkyEnemy() {
+        const enemy = this.skyEnemies.find(e => e.active === false);
+        if (enemy){
+            enemy.active = true;
+            enemy.x = canvas.width; // Enemy appear from right
+
+            // get those random feature back if we want to make this game more difficult
+            // enemy.baseY = Math.random() * 100 + 300; // randomize flight height
+            //
+            // // randomize initial angle so enemies don't wobble in the same way
+            // enemy.angle = Math.random() * Math.PI * 2;
+            //
+            // // randomize oscillation frequency and amplitude
+            // enemy.angleSpeed = 0.04 + Math.random() * 0.04;
+            // enemy.amplitude = 20 + Math.random() * 20;
+        }
+    }
+}

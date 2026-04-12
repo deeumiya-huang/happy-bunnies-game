@@ -1,6 +1,6 @@
 import {ctx} from "./config.js";
 import {Entity} from "./entity.js";
-import {loadedAssets} from "./index.js";
+import {loadedAssets} from "./asset-loader.js";
 
 class Enemy extends Entity{
     constructor(speed) {
