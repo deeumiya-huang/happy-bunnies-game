@@ -63,7 +63,7 @@ export class Game {
         this.loop();
     }
 
-    loop(time) {
+    loop() {
         // put request in first order can prevent game shutdown just because one frame is broken
         if (!this.isRunning) return;
         requestAnimationFrame((time) => this.loop(time));
