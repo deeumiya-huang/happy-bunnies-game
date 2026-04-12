@@ -1,6 +1,7 @@
 import {canvas, ctx, POOL_SIZE} from "./config.js";
 import { Player } from "./player.js";
 import { GroundEnemy, SkyEnemy } from "./enemy.js";
+import { loadedAssets, initAssets} from "./asset-loader.js";
 
 const bgCanvas = document.querySelector('#bgCanvas');
 const bgCtx = bgCanvas.getContext('2d');
@@ -15,13 +16,6 @@ const gameBoard = document.querySelector('#game-board');
 const gameHint = document.querySelector('.game-hint');
 let winnerImg = document.createElement('img');
 let winnerText = document.createElement('h3');
-
-const Assets = {
-    BACKGROUND: './assets/backgroundColorForest.png',
-    SPRITE_SHEET: './assets/spritesheet_jumper.png',
-    SPRITE_SHEET_XML: './assets/spritesheet_jumper.xml'
-};
-export let loadedAssets = {}; // put successfully loaded images
 
 const keys = {};
 
@@ -53,38 +47,7 @@ window.addEventListener('keyup', (e) => {
     keys[e.code] = false;
 })
 
-function loadImage(src){
-    return new Promise((resolve, reject) =>{
-        const img = new Image();
-        img.addEventListener('load', () => {
-            console.log(`Image loaded successfully: ${src}`);//delete later
-            resolve(img);
-        })
-        img.addEventListener('error', () => {
-            const error = new Error(`Image loaded failed: ${src}`);
-            console.error(`Image loaded failed: ${src}`, error);
-            reject(error)
-        })
-        img.src = src;
-    })
-}
 
-async function initGame(){
-    try {
-        const [bgImg, spriteSheet, xmlString] = await Promise.all([
-            loadImage(Assets.BACKGROUND),
-            loadImage(Assets.SPRITE_SHEET),
-            loadAtlas(Assets.SPRITE_SHEET_XML)
-        ])
-        loadedAssets.bgImg = bgImg;
-        loadedAssets.spriteSheet = spriteSheet;
-        loadedAssets.atlas = parseAtlasXML(xmlString);
-        console.log(`all images and xml files loaded successfully, ready to start game!`);
-    } catch (error) {
-        console.error(`game initialize failed:`, error);
-        alert(`please check image and xml file paths.`)
-    }
-}
 
 // drawing background is included in resize function, consider carefully when modify resize function
 function resize() {
@@ -100,7 +63,6 @@ function resize() {
 function drawBackground(){
     bgCtx.drawImage(loadedAssets.bgImg, 0, 0, loadedAssets.bgImg.width, loadedAssets.bgImg.height - 100, 0, 0, canvas.width, canvas.height);
 }
-
 
 function setupEntities() {
     player1 = new Player(1,300, 300, playerSpeed, {left: 'KeyA', right: 'KeyD', jump: 'KeyW'});
@@ -320,30 +282,8 @@ function updatePlayerCollision() {
         player2.x += player2.dx;
     }
 }
-// transfer xmlString to json Object
-function parseAtlasXML(xmlString) {
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlString, "text/xml");
-    const subTextures = xmlDoc.getElementsByTagName("SubTexture");
-    const atlas = {};
-    for (let subTexture of subTextures) {
-        const name = subTexture.getAttribute("name");
-        atlas[name] = {
-            x: parseInt(subTexture.getAttribute("x")),
-            y: parseInt(subTexture.getAttribute("y")),
-            width: parseInt(subTexture.getAttribute("width")),
-            height: parseInt(subTexture.getAttribute("height"))
-        };
-    }
-    return atlas;
-}
 
-async function loadAtlas(src) {
-    return fetch(src).then(response => {
-        if (!response.ok) throw new Error(`Failed to load: ${src}`);
-        return response.text();
-    });
-}
+
 
 function gameLoop(){
     // put request in first order can prevent game shutdown just because one frame is broken
@@ -371,7 +311,7 @@ function gameLoop(){
 window.addEventListener('resize', resize);
 
 // --- Initial Load (Executes on page load to display the background) ---
-initGame()
+initAssets()
     .then(() => {
         isGameInitialized = true;
 
