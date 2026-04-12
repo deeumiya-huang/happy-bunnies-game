@@ -67,11 +67,14 @@ export class EntityManager {
     updateItemCollision() {
         const players = [this.player1, this.player2];
         for (const p of players) {
-
             this.items.forEach(item => {
                 if (item.active && this.checkCollision(p.getHitbox(), item.getHitbox())) {
                     p.score += 1;
                     item.active = false;
+                    // send self-defined event to main.js
+                    window.dispatchEvent(new CustomEvent('updateScore', {
+                        detail: { playerNum: p.playerNumber, score: p.score }
+                    }));
                 }
             })
         }

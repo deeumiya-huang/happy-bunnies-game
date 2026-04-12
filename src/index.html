@@ -36,19 +36,25 @@
                     <canvas id="mainCanvas"></canvas>
                 </div>
                 <div class="game-items">
-                    <div class="player-lives" id="player1-lives">
-                        <img src="assets/carrots.png" alt="player lives pattern">
-                        <img src="assets/carrots.png" alt="player lives pattern">
-                        <img src="assets/carrots.png" alt="player lives pattern">
+                    <div class="player-wrapper" id="player1-wrapper">
+                        <div class="player-lives" id="player1-lives">
+                            <img src="assets/carrots.png" alt="player lives pattern">
+                            <img src="assets/carrots.png" alt="player lives pattern">
+                            <img src="assets/carrots.png" alt="player lives pattern">
+                        </div>
+                        <div class="player-score">Score: <span id="player1-score">0</span></div>
                     </div>
                     <div id="game-board">
                         <p class="game-hint">click button or press enter to start game</p>
                         <button class="btn btn-start" id="game-start">Start!</button>
                     </div>
-                    <div class="player-lives" id="player2-lives">
-                        <img src="assets/carrots.png" alt="player lives pattern">
-                        <img src="assets/carrots.png" alt="player lives pattern">
-                        <img src="assets/carrots.png" alt="player lives pattern">
+                    <div class="player-wrapper" id="player2-wrapper">
+                        <div class="player-lives" id="player2-lives">
+                            <img src="assets/carrots.png" alt="player lives pattern">
+                            <img src="assets/carrots.png" alt="player lives pattern">
+                            <img src="assets/carrots.png" alt="player lives pattern">
+                        </div>
+                        <div class="player-score">Score: <span id="player2-score">0</span></div>
                     </div>
                 </div>
                 <button class="btn btn-pause" id="game-pause">pause</button>

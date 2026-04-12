@@ -18,6 +18,7 @@ export class Player extends Entity{
         this.deathCounter = 0; //to play death animation after the player death
         this.animationFinished = false;
         this.remainingLives = 3;
+        this.score = 0;
     }
 
     draw() {
@@ -55,6 +56,7 @@ export class Player extends Entity{
         }
     }
     update(keys) {
+        if(!this.active){return;}
         this.dx = 0; // reset dx each frame
         if (this.state === 'hurt') {
             this.onGround = false;

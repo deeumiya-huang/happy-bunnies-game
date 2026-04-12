@@ -49,6 +49,7 @@ export class Game {
         if (!this.isReady || this.isStarted) return;// If resources aren't ready yet, or if the game has already started, do nothing
         if (this.entities.player1.remainingLives <= 0 || this.entities.player2.remainingLives <= 0) {
             this.resetLife();
+            this.resetScore();
         }
         this.isStarted = true;
         this.isRunning = true;
@@ -176,6 +177,11 @@ export class Game {
         });
     }
 
+    resetScore() {
+        this.entities.player1.score = 0;
+        this.entities.player2.score = 0;
+        window.dispatchEvent(new CustomEvent('resetScoreUI'));
+    }
     gameOver() {
         this.isStarted = false;
         this.isRunning = false;
@@ -203,4 +209,5 @@ export class Game {
         }
         console.log("Game Over");
     }
+
 }
