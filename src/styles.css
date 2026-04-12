@@ -116,8 +116,22 @@ nav li::before {
     height: 100%;
     z-index: 2;
 }
+.player-lives {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+}
+.player-lives img {
+    width: 50px;
+    height: auto;
+    margin: 0 5px;
+}
+#player2-lives {
+    justify-content: flex-end; /* 讓內容（紅蘿蔔）推向右側 */
+}
 /* ---Game Board Style--- */
 #game-board {
+    flex: 2;
     align-self: center;
 
     background-color: rgba(255, 255, 255, 0.9); /* Translucent white background */
