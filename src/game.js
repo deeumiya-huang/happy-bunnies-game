@@ -84,7 +84,7 @@ export class Game {
     togglePause() {
         if (!this.isStarted) return;
         this.isRunning = !this.isRunning;
-
+        this.entities.stopSpawning();
         if (this.isRunning) {
             // Resume Game: Restart Loop
             requestAnimationFrame((time) => this.loop(time));
@@ -203,12 +203,16 @@ export class Game {
     gameOver() {
         this.isRunning = false;
         this.isStarted = false;
+        this.entities.stopSpawning();
         this.entities.player1.active = false;
         this.entities.player2.active = false;
         this.entities.allEnemies.forEach(pool => {
             pool.forEach(e => {
                 e.active = false;
             })
+        })
+        this.entities.items.forEach(item => {
+            item.active = false;
         })
         // check player dead status
         const p1Dead = this.entities.player1.remainingLives <= 0;

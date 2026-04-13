@@ -15,6 +15,11 @@ export class EntityManager {
         this.level = level;
         this.playerSpeed = 1 + this.level / 2;
         this.enemySpeed = this.level / 2;
+        this.spawnTimers = {
+            ground: null,
+            sky: null,
+            item: null
+        };
     }
 
     setup() {
@@ -130,30 +135,38 @@ export class EntityManager {
 
     // keep spawning enemy in random time between 2-5s until game stop
     startSpawningGroundEnemy() {
+        clearTimeout(this.spawnTimers.ground);
         if (!this.game.isRunning){ return;}
         //1000 - 4000 ms
         const randomTime = Math.floor(Math.random() * 3000) + 2000;
-        setTimeout(() => {
+        this.spawnTimers.ground = setTimeout(() => {
             this.spawnGroundEnemy();
             this.startSpawningGroundEnemy(); // recursive call for the next random interval
         }, randomTime);
     }
     startSpawningSkyEnemy() {
+        clearTimeout(this.spawnTimers.sky);
         if (!this.game.isRunning){ return;}
         const randomTime = Math.floor(Math.random() * 3000) + 2000;
-        setTimeout(() => {
+        this.spawnTimers.sky = setTimeout(() => {
             this.spawnSkyEnemy();
             this.startSpawningSkyEnemy(); // recursive call for the next random interval
         }, randomTime);
     }
     startSpawningItem() {
+        clearTimeout(this.spawnTimers.item);
         if (!this.game.isRunning){ return;}
         //1000 - 4000 ms
         const randomTime = Math.floor(Math.random() * 3000) + 1000;
-        setTimeout(() => {
+        this.spawnTimers.item = setTimeout(() => {
             this.spawnItem();
             this.startSpawningItem(); // recursive call for the next random interval
         }, randomTime);
+    }
+    stopSpawning() {
+        clearTimeout(this.spawnTimers.ground);
+        clearTimeout(this.spawnTimers.sky);
+        clearTimeout(this.spawnTimers.item);
     }
     spawnGroundEnemy() {
         const enemy = this.groundEnemies.find(e => e.active === false);
