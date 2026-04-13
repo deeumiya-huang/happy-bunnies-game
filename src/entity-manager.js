@@ -79,10 +79,13 @@ export class EntityManager {
     }
     updateEnemyCollision() {
         const players = [this.player1, this.player2];
-        for (const p of players) {
-            // prevent redundant damage calculation
-            if (p.isHit || p.isInvincible || p.state === 'hurt') continue;
+        // prevent redundant damage calculation
+        if (this.player1.isInvincible || this.player2.isInvincible ||
+            this.player1.state === 'hurt' || this.player2.state === 'hurt') {
+            return;
+        }
 
+        for (const p of players) {
             for (const pool of this.allEnemies) {
                 for (const e of pool) {
                     if (e.active && this.checkCollision(p.getHitbox(), e.getHitbox())) {
