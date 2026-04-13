@@ -62,11 +62,13 @@ export class Player extends Entity{
             this.onGround = false;
             this.dy += this.gravity / 3; // divided by 3 to make the animation slower
             this.y += this.dy;
+            this.isInvincible = true; // prevent reduce life again after hurt.
             this.deathCounter++; // Play death animation for 5s and game over
             this.alpha = 0.6 + Math.sin(this.deathCounter * 0.5) * 0.4; // make alpha between 0.2 - 1
             if (this.deathCounter > 300) {
                 this.animationFinished = true;
                 this.alpha = 1;
+                this.isInvincible = false;
             }
             return; // skip the movement logic so that player can fall off the screen
         }

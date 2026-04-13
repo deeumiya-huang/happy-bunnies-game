@@ -62,6 +62,7 @@ export class EntityManager {
                         p.dy = -10;
 
                         this.setOthersInvincible(p);
+                        e.active = false;
                         // if anyone touched enemy, finished all the collision detection function immediately
                         return;
                     }
