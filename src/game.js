@@ -12,7 +12,7 @@ export class Game {
         this.winnerTimer = null; // to reset life after the winner comes out
         this.winnerImg = document.createElement('img');
         this.winnerText = document.createElement('h3');
-
+        this.drawText = document.createElement('h3');
     }
 
     init(onStart, onPause) {
@@ -47,15 +47,15 @@ export class Game {
             this.winnerTimer = null;
         }
         if (!this.isReady || this.isStarted) return;// If resources aren't ready yet, or if the game has already started, do nothing
-        if (this.entities.player1.remainingLives <= 0 || this.entities.player2.remainingLives <= 0) {
+        if (this.entities.player1.remainingLives <= 0 && this.entities.player2.remainingLives <= 0) {
             this.resetLife();
             this.resetScore();
         }
         this.isStarted = true;
         this.isRunning = true;
-
-        this.entities.player1.active = true;
-        this.entities.player2.active = true;
+        // only player remaining lives is active
+        this.entities.player1.active = this.entities.player1.remainingLives > 0;
+        this.entities.player2.active = this.entities.player2.remainingLives > 0;
 
         this.resetUI();
         // Start game loop and enemy spawning
@@ -126,28 +126,46 @@ export class Game {
         this.winnerImg.classList.add('winner-img');
         this.winnerImg.style.display = 'none'; // default setting
 
+        this.drawText.textContent = 'Draw!';
+        this.drawText.classList.add('game-hint');
+        this.drawText.style.display = 'none'; // default setting
+
         gameBoard.prepend(this.winnerImg);
         gameBoard.prepend(this.winnerText);
+        gameBoard.prepend(this.drawText);
     }
 
-    showWinner(loser) {
+    showWinner() {
         gameHint.style.display = 'none';
-        this.winnerText.style.display = 'block';
-        this.winnerImg.style.display = 'block';
 
-        if (loser.playerNumber === 1) {
-            this.winnerImg.src = 'assets/bunny2_stand.png';
+        const loser = this.findLoser();
+        if (!loser) {
+            this.drawText.style.display = 'block';
         } else {
-            this.winnerImg.src = 'assets/bunny1_stand.png';
+            this.winnerText.style.display = 'block';
+            this.winnerImg.style.display = 'block';
+            if (loser.playerNumber === 1) {
+                this.winnerImg.src = 'assets/bunny2_stand.png';
+            } else {
+                this.winnerImg.src = 'assets/bunny1_stand.png';
+            }
         }
-
         this.isStarted = false;
         startBtn.textContent = 'Play Again';
     }
-
+    findLoser() {
+        if (this.entities.player1.score > this.entities.player2.score) {
+            return this.entities.player2;
+        } else if (this.entities.player1.score < this.entities.player2.score) {
+            return this.entities.player1;
+        } else {
+            return null;
+        }
+    }
     resetUI() {
         this.winnerText.style.display = 'none';
         this.winnerImg.style.display = 'none';
+        this.drawText.style.display = 'none';
         gameHint.style.display = 'block';
     }
 
@@ -156,8 +174,8 @@ export class Game {
 
         // P1(300,300), P2(400,300)
         const startPositions = [
-            { x: 300, y: 300 },
-            { x: 400, y: 300 }
+            { x: 300, y: -150 },
+            { x: 400, y: -150 }
         ];
 
         players.forEach((p, index) => {
@@ -183,8 +201,8 @@ export class Game {
         window.dispatchEvent(new CustomEvent('resetScoreUI'));
     }
     gameOver() {
-        this.isStarted = false;
         this.isRunning = false;
+        this.isStarted = false;
         this.entities.player1.active = false;
         this.entities.player2.active = false;
         this.entities.allEnemies.forEach(pool => {
@@ -192,22 +210,26 @@ export class Game {
                 e.active = false;
             })
         })
-        //reset players back, and take start button back
-        this.resetPlayers();
+        // check player dead status
+        const p1Dead = this.entities.player1.remainingLives <= 0;
+        const p2Dead = this.entities.player2.remainingLives <= 0;
+
         gameBoard.style.display = 'flex';
         pauseBtn.style.display = 'none';
         pauseBtn.innerText = "Pause";
-        if (this.entities.player1.remainingLives === 0) {
-            this.showWinner(this.entities.player1);
-        } else if (this.entities.player2.remainingLives === 0) {
-            this.showWinner(this.entities.player2);
+
+        if (p1Dead && p2Dead) {
+            this.showWinner();
+            console.log("All players dead. Final Result!");
         } else {
             gameHint.style.display = 'block';
             this.winnerImg.style.display = 'none';
             this.winnerText.style.display = 'none';
-            startBtn.textContent = 'Start';
+            startBtn.textContent = 'Next Round';
+            console.log("A round ended. Preparing next round...");
         }
-        console.log("Game Over");
+        //reset players back, and take start button back
+        this.resetPlayers();
     }
 
 }
