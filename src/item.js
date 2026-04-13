@@ -5,7 +5,6 @@ import {loadedAssets} from "./asset-loader.js";
 export class Item extends Entity{
     constructor(speed) {
         super(speed);
-        this.dy = this.speed; // item fall from top
         this.width = 40;
         this.height = 40;
     }
@@ -16,6 +15,7 @@ export class Item extends Entity{
     }
     update(){
         if(!this.active){return;}
+        this.dy = this.speed; // item fall from top
         this.y += this.dy;
         if (this.y > canvas.height) {
             this.active = false;

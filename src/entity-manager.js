@@ -15,6 +15,7 @@ export class EntityManager {
         this.level = level;
         this.playerSpeed = 1 + this.level / 2;
         this.enemySpeed = this.level / 2;
+        this.itemSpeed = this.level / 2;
         this.spawnTimers = {
             ground: null,
             sky: null,
@@ -28,7 +29,7 @@ export class EntityManager {
         for (let i = 0; i < POOL_SIZE; i++) {
             this.groundEnemies.push(new GroundEnemy(this.enemySpeed));
             this.skyEnemies.push(new SkyEnemy(this.enemySpeed));
-            this.items.push(new Item(this.playerSpeed));
+            this.items.push(new Item(this.itemSpeed));
         }
     }
     update(keys) {
@@ -44,7 +45,37 @@ export class EntityManager {
     }
     levelUp() {
         this.level++;
-        console.log(`Level Up! Current Level: ${this.level}`);
+        this.playerSpeed = 1 + this.level / 2;
+        this.enemySpeed = this.level / 2;
+        this.itemSpeed = this.level / 2;
+
+        this.player1.speed = this.playerSpeed;
+        this.player2.speed = this.playerSpeed;
+        this.allEnemies.forEach(pool => {
+            pool.forEach(enemy => {
+                enemy.speed = this.enemySpeed;
+                enemy.dx = -this.enemySpeed; // dx has to reset to new speed or the speed won't change.
+            });
+        });
+        this.items.forEach((item => {
+            item.speed = this.itemSpeed;
+            item.dy = this.itemSpeed;
+        }))
+        console.log(`Level Up! Current Level: ${this.level}, PlayerSpeed: ${this.playerSpeed}, EnemySpeed: ${this.enemySpeed}, ItemSpeed: ${this.itemSpeed}`);
+    }
+    resetDifficulty() {
+        this.level = 1; // back to default value
+        this.enemySpeed = 0.5;
+        this.enemySpeed = 0.5;
+        this.playerSpeed = 1.5;
+
+        // update all the entities speed
+        this.player1.speed = this.playerSpeed;
+        this.player2.speed = this.playerSpeed;
+        this.allEnemies.forEach(pool => pool.forEach(e => e.speed = this.enemySpeed));
+        this.items.forEach(item => {
+            item.speed = this.itemSpeed;
+        });
     }
     updateEnemyCollision() {
         const players = [this.player1, this.player2];

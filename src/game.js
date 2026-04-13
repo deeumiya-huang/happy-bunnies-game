@@ -50,6 +50,7 @@ export class Game {
         if (this.entities.player1.remainingLives <= 0 && this.entities.player2.remainingLives <= 0) {
             this.resetLife();
             this.resetScore();
+            this.entities.resetDifficulty();
         }
         this.isStarted = true;
         this.isRunning = true;
@@ -200,6 +201,8 @@ export class Game {
         this.entities.player2.score = 0;
         window.dispatchEvent(new CustomEvent('resetScoreUI'));
     }
+
+    // each round finish will run this function, but the round end and total game over logic separate in this function
     gameOver() {
         this.isRunning = false;
         this.isStarted = false;
@@ -234,6 +237,7 @@ export class Game {
         }
         //reset players back, and take start button back
         this.resetPlayers();
+        this.entities.levelUp();
     }
 
 }
