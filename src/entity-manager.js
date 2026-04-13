@@ -168,12 +168,12 @@ export class EntityManager {
 
     }
 
-    // keep spawning enemy in random time between 2-5s until game stop
+    // keep spawning enemy in random time between 2-4s until game stop
     startSpawningGroundEnemy() {
         clearTimeout(this.spawnTimers.ground);
         if (!this.game.isRunning){ return;}
-        //1000 - 4000 ms
-        const randomTime = Math.floor(Math.random() * 3000) + 2000;
+        //2000 - 4000 ms
+        const randomTime = Math.floor(Math.random() * 2000) + 2000;
         this.spawnTimers.ground = setTimeout(() => {
             this.spawnGroundEnemy();
             this.startSpawningGroundEnemy(); // recursive call for the next random interval
@@ -182,7 +182,7 @@ export class EntityManager {
     startSpawningSkyEnemy() {
         clearTimeout(this.spawnTimers.sky);
         if (!this.game.isRunning){ return;}
-        const randomTime = Math.floor(Math.random() * 3000) + 2000;
+        const randomTime = Math.floor(Math.random() * 2000) + 2000;
         this.spawnTimers.sky = setTimeout(() => {
             this.spawnSkyEnemy();
             this.startSpawningSkyEnemy(); // recursive call for the next random interval
