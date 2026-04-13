@@ -23,7 +23,7 @@ export class Player extends Entity{
 
     draw() {
         if (!this.active) return;
-        let spriteName = '';
+        let spriteName;
         if (this.state === 'jump') {
             spriteName = `bunny${this.playerNumber}_jump.png`;
         } else if (this.state === 'walk') {
