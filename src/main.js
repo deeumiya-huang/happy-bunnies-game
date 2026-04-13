@@ -29,6 +29,7 @@ function displayInitialHighScore() {
 }
 async function boot() {
     await initAssets(); // wait important resource loaded and start to play game.
+    game.isReady = true;
     resize(); // decide canvas' width and height first to let all the entity get correct x/y
     // initialize game and bind keyboard input onto button click
     displayInitialHighScore();
@@ -36,7 +37,7 @@ async function boot() {
         () => startBtn.click(),
         () => pauseBtn.click()
     );
-    game.isReady = true;
+
     console.log(`game initialize!`);
 
     startBtn.addEventListener('click', () => {
