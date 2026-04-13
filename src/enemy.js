@@ -29,7 +29,7 @@ export class GroundEnemy extends Enemy {
     draw(){
         if(!this.active){return;}
         this.updateMoveAnimation()
-        let spriteName = '';
+        let spriteName;
         if (this.moveFrame === 1) {
             spriteName = `spikeMan_walk2.png`; //change between stand and walk
         } else {
@@ -58,7 +58,7 @@ export class SkyEnemy extends Enemy {
     draw() {
         if(!this.active){return;}
         this.updateMoveAnimation()
-        let spriteName = '';
+        let spriteName;
         if (this.moveFrame === 1) {
             spriteName = `wingMan3.png`;
         } else {
