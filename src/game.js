@@ -153,6 +153,14 @@ export class Game {
         }
         this.isStarted = false;
         startBtn.textContent = 'Play Again';
+
+        const p1Score = this.entities.player1.score;
+        const p2Score = this.entities.player2.score;
+        const higherScore = Math.max(p1Score, p2Score);
+        const finalHighScore = this.updateHighScore(higherScore);
+
+        // update the highest score on webpage
+        document.querySelector('#high-score-display').textContent = `High Score: ${finalHighScore}`;
     }
     findLoser() {
         if (this.entities.player1.score > this.entities.player2.score) {
@@ -200,6 +208,18 @@ export class Game {
         this.entities.player1.score = 0;
         this.entities.player2.score = 0;
         window.dispatchEvent(new CustomEvent('resetScoreUI'));
+    }
+
+    updateHighScore(currentScore) {
+        // read recorded the highest score from localStorage, if not, set default as 0.
+        const savedHighScore = localStorage.getItem('bunny_high_score') || 0;
+
+        if (currentScore > savedHighScore) {
+            localStorage.setItem('bunny_high_score', currentScore);
+            console.log(`new record! highest score：${currentScore}`);
+            return currentScore;
+        }
+        return savedHighScore;
     }
 
     // each round finish will run this function, but the round end and total game over logic separate in this function

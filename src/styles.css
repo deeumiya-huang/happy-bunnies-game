@@ -143,10 +143,22 @@ nav li::before {
     font-weight: bold;
 }
 /* ---Game Board Style--- */
-#game-board {
+.gameboard-wrapper {
     flex: 2;
-    align-self: center;
-
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+}
+#high-score-display {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    font-size: 1.4rem;
+    color: #5d4037;
+    font-weight: bold;
+}
+#game-board {
+    margin: auto 0;
+    justify-self: center;
     background-color: rgba(255, 255, 255, 0.9); /* Translucent white background */
     border: 8px solid #8d5524; /* Woody dark brown border */
     border-radius: 30px;

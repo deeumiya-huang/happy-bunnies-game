@@ -20,10 +20,18 @@ function resize() {
         game.drawBackground(loadedAssets);
     }
 }
+function displayInitialHighScore() {
+    const highScore = localStorage.getItem('bunny_high_score') || 0;
+    const highScoreElement = document.querySelector('#high-score-display');
+    if (highScoreElement) {
+        highScoreElement.textContent = `High Score: ${highScore}`;
+    }
+}
 async function boot() {
     await initAssets(); // wait important resource loaded and start to play game.
     resize(); // decide canvas' width and height first to let all the entity get correct x/y
     // initialize game and bind keyboard input onto button click
+    displayInitialHighScore();
     game.init(
         () => startBtn.click(),
         () => pauseBtn.click()
