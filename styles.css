@@ -106,6 +106,24 @@ nav li::before {
     flex: 6;
     position: relative;
 }
+#game-container:fullscreen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#game-container:fullscreen .canvas-wrapper {
+    width: 100vw;
+    height: 100vh;
+}
+
+#fullscreen-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 3;
+}
 .game-items {
     position: absolute;
     top: 0;
@@ -341,4 +359,49 @@ nav li::before {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 0.85rem;
     color: #bdc3c7;
+}
+#mobile-controls {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        padding: 10px;
+        grid-template-columns: 1fr;
+    }
+    .page-title {
+        grid-column: 1;
+    }
+    .title {
+        font-size: 2rem;
+    }
+    nav {
+        justify-self: center;
+        margin-top: 10px;
+    }
+     #left-bunny, #right-bunny {
+        display: none;
+    }
+    .canvas-wrapper {
+        height: 50vh;
+    }
+    .game-items {
+        padding: 5px;
+    }
+    .player-wrapper {
+        width: 120px;
+    }
+    .player-lives img {
+        width: 30px; /* Shrink the carrot icon */
+    }
+    #mobile-controls {
+        position: absolute;
+        bottom: 50px;
+        left: 20px;
+        z-index: 3;
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        background: rgba(0,0,0,0.1);
+    }
 }

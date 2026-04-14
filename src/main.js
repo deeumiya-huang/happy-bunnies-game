@@ -11,8 +11,11 @@ export const pauseBtn = document.querySelector('#game-pause');
 export const modeBtn = document.querySelector('#change-mode');
 export const gameBoard = document.querySelector('#game-board');
 export const gameHint = document.querySelector('#hint');
-export const modeName = document.querySelector('#mode-name');
+const modeName = document.querySelector('#mode-name');
 const player2Display = document.querySelector('#player2-wrapper');
+
+const fullscreenBtn = document.querySelector('#fullscreen-btn');
+const gameContainer = document.querySelector('#game-container');
 // drawing background is included in resize function, consider carefully when modify resize function
 function resize() {
     const {width, height} = bgCanvas.parentElement.getBoundingClientRect();
@@ -23,6 +26,51 @@ function resize() {
     if (game && game.isReady){
         game.drawBackground(loadedAssets);
     }
+}
+function handleMobileRestriction() {
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile) {
+        // mobile can only play single mode
+        game.gameMode = 'single';
+        modeName.textContent = 'Single Mode (Mobile Optimized)';
+        player2Display.style.visibility = 'hidden';
+
+        // hide double mode btn
+        modeBtn.style.display = 'none';
+        doubleBtn.style.display = 'none';
+
+        selectMode.textContent = "Mobile version: Single Player only";
+    }
+}
+function setupMobileControls() {
+    const btnLeft = document.querySelector('#btn-left');
+    const btnRight = document.querySelector('#btn-right');
+    const btnJump = document.querySelector('#btn-jump');
+
+    btnLeft.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // intercept the browser's default behavior
+        game.keys['keyA'] = true;
+    }, {passive: false})
+    btnLeft.addEventListener('touchend', () => {
+        game.keys['KeyA'] = false;
+    });
+
+    btnRight.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        game.keys['KeyD'] = true;
+    });
+    btnRight.addEventListener('touchend', () => {
+        game.keys['KeyD'] = false;
+    });
+
+    btnJump.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        game.keys['KeyW'] = true;
+    });
+    btnJump.addEventListener('touchend', () => {
+        game.keys['KeyW'] = false;
+    });
 }
 function displayInitialHighScore() {
     const highScore = localStorage.getItem('bunny_high_score') || 0;
@@ -43,6 +91,8 @@ function setUpDisplay() {
 async function boot() {
     await initAssets(); // wait important resource loaded and start to play game.
     game.isReady = true;
+
+    handleMobileRestriction();
     resize(); // decide canvas' width and height first to let all the entity get correct x/y
     // initialize game and bind keyboard input onto button click
     displayInitialHighScore();
@@ -52,6 +102,8 @@ async function boot() {
     );
 
     console.log(`game initialize!`);
+
+    setupMobileControls();
 
     singleBtn.addEventListener('click', () => {
         game.gameMode = 'single';
@@ -122,6 +174,29 @@ async function boot() {
     });
 }
 
-window.addEventListener('resize', resize);
+window.addEventListener('resize', () => {
+    handleMobileRestriction();
+    resize();
+});
+
+fullscreenBtn.addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+        gameContainer.requestFullscreen().catch(err => {
+            alert(`Error attempting to enable full-screen mode: ${err.message}`);
+        });
+        fullscreenBtn.textContent = "Exit Fullscreen";
+    } else {
+        document.exitFullscreen();
+        fullscreenBtn.textContent = "Go Fullscreen";
+    }
+});
+// listen for fullscreen change events (updates button text when Esc is pressed).
+document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) {
+        fullscreenBtn.textContent = "Go Fullscreen";
+        // trigger resize to ensure canvas dimensions are correct after exiting fullscreen.
+        resize();
+    }
+});
 
 boot();
