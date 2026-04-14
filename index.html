@@ -8,14 +8,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barriecito&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <script type="module" src="main.js" defer></script>
+    <script type="module" src="src/main.js" defer></script>
 </head>
 <body>
     <header class="header-container">
         <div class="page-title">
-            <img class="bunny-img" src="assets/lifes.png" alt="rabbit pattern">
+            <img class="bunny-img" src="src/assets/lifes.png" alt="rabbit pattern">
             <h1 class="title">Happy Bunnies</h1>
-            <img class="bunny-img" src="assets/lifes.png" alt="rabbit pattern">
+            <img class="bunny-img" src="src/assets/lifes.png" alt="rabbit pattern">
         </div>
         <nav>
             <ul class="nav-links">
@@ -27,9 +27,9 @@
         </nav>
     </header>
     <main class="main-container">
-        <img id="background-img" src="assets/backgroundColorForest.png" alt="background image">
+        <img id="background-img" src="src/assets/backgroundColorForest.png" alt="background image">
         <div class="subcontainer">
-            <img id="left-bunny" src="assets/bunny1_stand.png" alt="left bunny">
+            <img id="left-bunny" src="src/assets/bunny1_stand.png" alt="left bunny">
             <section id="game-container">
                 <div class="canvas-wrapper">
                     <canvas id="bgCanvas"></canvas>
@@ -38,9 +38,9 @@
                 <div class="game-items">
                     <div class="player-wrapper" id="player1-wrapper">
                         <div class="player-lives" id="player1-lives">
-                            <img src="assets/carrots.png" alt="player lives pattern">
-                            <img src="assets/carrots.png" alt="player lives pattern">
-                            <img src="assets/carrots.png" alt="player lives pattern">
+                            <img src="src/assets/carrots.png" alt="player lives pattern">
+                            <img src="src/assets/carrots.png" alt="player lives pattern">
+                            <img src="src/assets/carrots.png" alt="player lives pattern">
                         </div>
                         <div class="player-score">Score: <span id="player1-score">0</span></div>
                     </div>
@@ -53,16 +53,16 @@
                     </div>
                     <div class="player-wrapper" id="player2-wrapper">
                         <div class="player-lives" id="player2-lives">
-                            <img src="assets/carrots.png" alt="player lives pattern">
-                            <img src="assets/carrots.png" alt="player lives pattern">
-                            <img src="assets/carrots.png" alt="player lives pattern">
+                            <img src="src/assets/carrots.png" alt="player lives pattern">
+                            <img src="src/assets/carrots.png" alt="player lives pattern">
+                            <img src="src/assets/carrots.png" alt="player lives pattern">
                         </div>
                         <div class="player-score">Score: <span id="player2-score">0</span></div>
                     </div>
                 </div>
                 <button class="btn btn-pause" id="game-pause">pause</button>
             </section>
-            <img id="right-bunny" src="assets/bunny2_stand.png" alt="right bunny">
+            <img id="right-bunny" src="src/assets/bunny2_stand.png" alt="right bunny">
         </div>
     </main>
 

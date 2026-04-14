@@ -103,7 +103,7 @@ export class Game {
         {
             while (container.children.length < 3) {
                 const life = document.createElement('img');
-                life.src = 'assets/carrots.png';
+                life.src = './src/assets/carrots.png';
                 life.alt = 'player lives pattern';
                 container.appendChild(life);
             }
@@ -146,9 +146,9 @@ export class Game {
             this.winnerText.style.display = 'block';
             this.winnerImg.style.display = 'block';
             if (loser.playerNumber === 1) {
-                this.winnerImg.src = 'assets/bunny2_stand.png';
+                this.winnerImg.src = './src/assets/bunny2_stand.png';
             } else {
-                this.winnerImg.src = 'assets/bunny1_stand.png';
+                this.winnerImg.src = './src/assets/bunny1_stand.png';
             }
         }
         this.isStarted = false;

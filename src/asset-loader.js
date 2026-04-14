@@ -1,7 +1,7 @@
  export const Assets = {
-    BACKGROUND: './assets/backgroundColorForest.png',
-    SPRITE_SHEET: './assets/spritesheet_jumper.png',
-    SPRITE_SHEET_XML: './assets/spritesheet_jumper.xml'
+    BACKGROUND: './src/assets/backgroundColorForest.png',
+    SPRITE_SHEET: './src/assets/spritesheet_jumper.png',
+    SPRITE_SHEET_XML: './src/assets/spritesheet_jumper.xml'
 };
 export let loadedAssets = {}; // put successfully loaded images
 

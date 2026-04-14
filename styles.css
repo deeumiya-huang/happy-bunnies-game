@@ -50,7 +50,7 @@ nav li::before {
     /* setting the image */
     width: 20px;
     height: 20px;
-    background-image: url('assets/carrots.png');
+    background-image: url('src/assets/carrots.png');
     background-size: contain;
     background-repeat: no-repeat;
 }
