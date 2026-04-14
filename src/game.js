@@ -81,6 +81,29 @@ export class Game {
         bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
         bgCtx.drawImage(loadedAssets.bgImg, 0, 0, loadedAssets.bgImg.width, loadedAssets.bgImg.height - 100, 0, 0, canvas.width, canvas.height);
     }
+    initWinnerUI() {
+        this.winnerText.textContent = 'Winner:';
+        this.winnerText.classList.add('game-hint');
+        this.winnerText.style.fontSize = '1.8rem';
+        this.winnerText.style.display = 'none'; // default setting
+
+        this.winnerImg.classList.add('winner-img');
+        this.winnerImg.style.display = 'none'; // default setting
+
+        this.drawText.textContent = 'Draw!';
+        this.drawText.classList.add('game-hint');
+        this.drawText.style.display = 'none'; // default setting
+
+        gameBoard.prepend(this.winnerImg);
+        gameBoard.prepend(this.winnerText);
+        gameBoard.prepend(this.drawText);
+    }
+    resetUI() {
+        this.winnerText.style.display = 'none';
+        this.winnerImg.style.display = 'none';
+        this.drawText.style.display = 'none';
+        gameHint.style.display = 'block';
+    }
 
     togglePause() {
         if (!this.isStarted) return;
@@ -95,6 +118,36 @@ export class Game {
         }
     }
 
+    resetPlayers() {
+        const players = [this.entities.player1, this.entities.player2];
+
+        // P1(300,300), P2(400,300)
+        const startPositions = [
+            { x: 300, y: -150 },
+            { x: 400, y: -150 }
+        ];
+
+        players.forEach((p, index) => {
+            p.isHit = false;
+            p.isInvincible = false;
+            p.animationFinished = false; // reset game over animation
+            p.invincibilityTimer = 0;
+            p.alpha = 1;
+            p.state = 'stop';            // back to stand position
+            p.deathCounter = 0;          // reset timer
+
+            // back to start position
+            p.x = startPositions[index].x;
+            p.y = startPositions[index].y;
+            p.dy = 0;
+            p.dx = 0;
+        });
+    }
+    resetScore() {
+        this.entities.player1.score = 0;
+        this.entities.player2.score = 0;
+        window.dispatchEvent(new CustomEvent('resetScoreUI'));
+    }
     resetLife() {
         this.entities.player1.remainingLives = 3;
         this.entities.player2.remainingLives = 3;
@@ -116,24 +169,6 @@ export class Game {
         if (livesContainer.lastElementChild) {
             livesContainer.removeChild(livesContainer.lastElementChild);
         }
-    }
-
-    initWinnerUI() {
-        this.winnerText.textContent = 'Winner:';
-        this.winnerText.classList.add('game-hint');
-        this.winnerText.style.fontSize = '1.8rem';
-        this.winnerText.style.display = 'none'; // default setting
-
-        this.winnerImg.classList.add('winner-img');
-        this.winnerImg.style.display = 'none'; // default setting
-
-        this.drawText.textContent = 'Draw!';
-        this.drawText.classList.add('game-hint');
-        this.drawText.style.display = 'none'; // default setting
-
-        gameBoard.prepend(this.winnerImg);
-        gameBoard.prepend(this.winnerText);
-        gameBoard.prepend(this.drawText);
     }
 
     showWinner() {
@@ -170,44 +205,6 @@ export class Game {
         } else {
             return null;
         }
-    }
-    resetUI() {
-        this.winnerText.style.display = 'none';
-        this.winnerImg.style.display = 'none';
-        this.drawText.style.display = 'none';
-        gameHint.style.display = 'block';
-    }
-
-    resetPlayers() {
-        const players = [this.entities.player1, this.entities.player2];
-
-        // P1(300,300), P2(400,300)
-        const startPositions = [
-            { x: 300, y: -150 },
-            { x: 400, y: -150 }
-        ];
-
-        players.forEach((p, index) => {
-            p.isHit = false;
-            p.isInvincible = false;
-            p.animationFinished = false; // reset game over animation
-            p.invincibilityTimer = 0;
-            p.alpha = 1;
-            p.state = 'stop';            // back to stand position
-            p.deathCounter = 0;          // reset timer
-
-            // back to start position
-            p.x = startPositions[index].x;
-            p.y = startPositions[index].y;
-            p.dy = 0;
-            p.dx = 0;
-        });
-    }
-
-    resetScore() {
-        this.entities.player1.score = 0;
-        this.entities.player2.score = 0;
-        window.dispatchEvent(new CustomEvent('resetScoreUI'));
     }
 
     updateHighScore(currentScore) {

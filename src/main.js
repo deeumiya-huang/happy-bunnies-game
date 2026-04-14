@@ -7,8 +7,6 @@ export const startBtn = document.querySelector('#game-start');
 export const pauseBtn = document.querySelector('#game-pause');
 export const gameBoard = document.querySelector('#game-board');
 export const gameHint = document.querySelector('.game-hint');
-// export const score1 = document.querySelector('#player1-score');
-// export const score2 = document.querySelector('#player2-score');
 // drawing background is included in resize function, consider carefully when modify resize function
 function resize() {
     const {width, height} = bgCanvas.parentElement.getBoundingClientRect();

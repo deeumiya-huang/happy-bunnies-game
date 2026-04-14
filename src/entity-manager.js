@@ -43,6 +43,7 @@ export class EntityManager {
         this.updateItemCollision();
         this.updatePlayerCollision();
     }
+
     levelUp() {
         this.level++;
         this.playerSpeed = 1 + this.level / 2;
@@ -77,6 +78,7 @@ export class EntityManager {
             item.speed = this.itemSpeed;
         });
     }
+
     updateEnemyCollision() {
         const players = [this.player1, this.player2];
         // prevent redundant damage calculation
@@ -140,7 +142,6 @@ export class EntityManager {
             this.player2.x += this.player2.dx;
         }
     }
-
     checkCollision(rect1, rect2) {
         return (
             rect1.x  < rect2.x + rect2.width  &&
