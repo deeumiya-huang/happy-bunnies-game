@@ -3,10 +3,16 @@ import { loadedAssets, initAssets } from "./asset-loader.js";
 import { Game } from "./game.js";
 
 const game = new Game();
+export const singleBtn = document.querySelector('#single-mode');
+export const doubleBtn = document.querySelector('#double-mode');
+export const selectMode = document.querySelector('#select-mode');
 export const startBtn = document.querySelector('#game-start');
 export const pauseBtn = document.querySelector('#game-pause');
+export const modeBtn = document.querySelector('#change-mode');
 export const gameBoard = document.querySelector('#game-board');
-export const gameHint = document.querySelector('.game-hint');
+export const gameHint = document.querySelector('#hint');
+export const modeName = document.querySelector('#mode-name');
+const player2Display = document.querySelector('#player2-wrapper');
 // drawing background is included in resize function, consider carefully when modify resize function
 function resize() {
     const {width, height} = bgCanvas.parentElement.getBoundingClientRect();
@@ -25,6 +31,15 @@ function displayInitialHighScore() {
         highScoreElement.textContent = `High Score: ${highScore}`;
     }
 }
+function setUpDisplay() {
+    modeName.style.display = 'block';
+    singleBtn.style.display = 'none';
+    doubleBtn.style.display = 'none';
+    selectMode.style.display = 'none';
+    modeName.style.display = 'block';
+    gameHint.style.display = 'block';
+    startBtn.style.display = 'block';
+}
 async function boot() {
     await initAssets(); // wait important resource loaded and start to play game.
     game.isReady = true;
@@ -38,8 +53,23 @@ async function boot() {
 
     console.log(`game initialize!`);
 
+    singleBtn.addEventListener('click', () => {
+        game.gameMode = 'single';
+        modeName.textContent = 'Single Mode';
+        player2Display.style.visibility = 'hidden';
+        setUpDisplay();
+    })
+
+    doubleBtn.addEventListener('click', () => {
+        game.gameMode = 'double';
+        modeName.textContent = 'Double Mode';
+        player2Display.style.visibility = 'visible';
+        setUpDisplay();
+    })
+
     startBtn.addEventListener('click', () => {
         gameBoard.style.display = 'none';
+        modeName.style.display = 'none';
         gameHint.style.display = 'block';
         pauseBtn.style.display = 'inline-block';
         game.start();
@@ -55,6 +85,30 @@ async function boot() {
             pauseBtn.innerText = "Resume";
         }
     });
+
+    modeBtn.addEventListener('click', () => {
+        gameHint.style.display = 'block';
+
+        if (game.gameMode === 'single') {
+            game.gameMode = 'double';
+            modeName.textContent = 'Double Mode';
+            player2Display.style.visibility = 'visible';
+        } else {
+            game.gameMode = 'single';
+            modeName.textContent = 'Single Mode';
+            player2Display.style.visibility = 'hidden';
+        }
+        modeName.style.display = 'block';
+        modeBtn.style.display = 'none';
+        startBtn.textContent = 'game start!';
+
+        game.resetStatus();
+
+        game.drawText.style.display = 'none';
+        game.winnerText.style.display = 'none';
+        game.winnerImg.style.display = 'none';
+    })
+
     window.addEventListener('updateScore', (e) => {
         const { playerNum, score } = e.detail;
         const scoreElement = document.querySelector(`#player${playerNum}-score`);

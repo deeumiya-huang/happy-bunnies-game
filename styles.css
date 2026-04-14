@@ -15,7 +15,7 @@ body {
     color: #efebe9;
     padding: 20px 40px;
     font-family: 'Comic Sans MS', cursive, sans-serif;
-    border-bottom: 10px solid #e67616;
+    border-bottom: 15px solid #e67616;
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
@@ -66,7 +66,8 @@ nav li::before {
 }
 .title {
     font-family: "Barriecito", system-ui;
-    font-size: 3.2rem;
+    font-size: 3.6rem;
+    letter-spacing: 0.05em;
     font-weight: 500;
     font-style: normal;
 }
@@ -173,6 +174,10 @@ nav li::before {
     max-width: 400px;
 }
 
+#hint {
+    display: none;
+}
+
 .game-hint {
     font-family: 'Comic Sans MS', cursive, sans-serif;
     font-size: 1.1rem;
@@ -227,6 +232,14 @@ nav li::before {
     position: relative;
 }
 
+#game-start, #change-mode, #mode-name {
+    display: none;
+}
+
+#mode-name, #select-mode {
+    font-size: 1.4rem;
+    font-weight: bold;
+}
 .btn-start {
     background-color: #ff8c32;
     border: 3px solid #e67616;

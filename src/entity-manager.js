@@ -33,7 +33,7 @@ export class EntityManager {
         }
     }
     update(keys) {
-        [this.player1, this.player2].forEach(player => {player.update(keys)})
+        [this.player1, this.player2].forEach(player => {if (player.active) {player.update(keys);}})
         if (this.player1.animationFinished || this.player2.animationFinished) {this.game.gameOver()}
         this.allEnemies.forEach(pool =>{
             pool.forEach(enemy => {enemy.update()})

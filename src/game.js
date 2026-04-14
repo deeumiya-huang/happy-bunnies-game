@@ -1,9 +1,10 @@
 import { ctx, canvas, bgCtx, bgCanvas } from "./config.js";
 import { EntityManager } from "./entity-manager.js";
-import {gameBoard, gameHint, pauseBtn, startBtn} from "./main.js";
+import {gameBoard, gameHint, pauseBtn, startBtn, modeBtn, selectMode, singleBtn, doubleBtn} from "./main.js";
 
 export class Game {
     constructor() {
+        this.gameMode = 'double'; //can choose single or double
         this.isReady = false;  // Whether resources are fully loaded
         this.isRunning = false;
         this.isStarted = false; // Whether the game has been started via click
@@ -47,16 +48,24 @@ export class Game {
             this.winnerTimer = null;
         }
         if (!this.isReady || this.isStarted) return;// If resources aren't ready yet, or if the game has already started, do nothing
-        if (this.entities.player1.remainingLives <= 0 && this.entities.player2.remainingLives <= 0) {
-            this.resetLife();
-            this.resetScore();
-            this.entities.resetDifficulty();
+        //reset players back to original place
+        this.resetPlayers();
+
+        const p1Dead = this.entities.player1.remainingLives <= 0;
+        // in single mode, p2Dead is always true
+        const p2Dead = this.gameMode === 'double' ? this.entities.player2.remainingLives <= 0 : true;
+        if (p1Dead && p2Dead) {
+            this.resetStatus();
         }
         this.isStarted = true;
         this.isRunning = true;
         // only player remaining lives is active
         this.entities.player1.active = this.entities.player1.remainingLives > 0;
-        this.entities.player2.active = this.entities.player2.remainingLives > 0;
+        if (this.gameMode === 'double') {
+            this.entities.player2.active = this.entities.player2.remainingLives > 0;
+        } else {
+            this.entities.player2.active = false; // in single mode, p2.active is always false
+        }
 
         this.resetUI();
         // Start game loop and enemy spawning
@@ -102,7 +111,9 @@ export class Game {
         this.winnerText.style.display = 'none';
         this.winnerImg.style.display = 'none';
         this.drawText.style.display = 'none';
-        gameHint.style.display = 'block';
+        selectMode.style.display = 'block';
+        singleBtn.style.display = 'block';
+        doubleBtn.style.display = 'block';
     }
 
     togglePause() {
@@ -143,6 +154,13 @@ export class Game {
             p.dx = 0;
         });
     }
+
+    resetStatus() {
+        this.resetLife();
+        this.resetScore();
+        this.entities.resetDifficulty();
+        console.log(`Reset Level! Current Level: ${this.entities.level}, PlayerSpeed: ${this.entities.playerSpeed}, EnemySpeed: ${this.entities.enemySpeed}, ItemSpeed: ${this.entities.itemSpeed}`);
+    }
     resetScore() {
         this.entities.player1.score = 0;
         this.entities.player2.score = 0;
@@ -174,19 +192,27 @@ export class Game {
     showWinner() {
         gameHint.style.display = 'none';
 
-        const loser = this.findLoser();
-        if (!loser) {
+        if (this.gameMode === 'single') {
+            this.drawText.textContent = `Game Over! Score: ${this.entities.player1.score}`;
             this.drawText.style.display = 'block';
         } else {
-            this.winnerText.style.display = 'block';
-            this.winnerImg.style.display = 'block';
-            if (loser.playerNumber === 1) {
-                this.winnerImg.src = './src/assets/bunny2_stand.png';
+            // original double mode logic.
+            const loser = this.findLoser();
+            if (!loser) {
+                this.drawText.style.display = 'block';
             } else {
-                this.winnerImg.src = './src/assets/bunny1_stand.png';
+                this.winnerText.style.display = 'block';
+                this.winnerImg.style.display = 'block';
+                if (loser.playerNumber === 1) {
+                    this.winnerImg.src = './src/assets/bunny2_stand.png';
+                } else {
+                    this.winnerImg.src = './src/assets/bunny1_stand.png';
+                }
             }
         }
+
         this.isStarted = false;
+        modeBtn.style.display = 'block';
         startBtn.textContent = 'Play Again';
 
         const p1Score = this.entities.player1.score;
@@ -234,13 +260,16 @@ export class Game {
         this.entities.items.forEach(item => {
             item.active = false;
         })
-        // check player dead status
-        const p1Dead = this.entities.player1.remainingLives <= 0;
-        const p2Dead = this.entities.player2.remainingLives <= 0;
-
         gameBoard.style.display = 'flex';
         pauseBtn.style.display = 'none';
         pauseBtn.innerText = "Pause";
+        selectMode.style.display = 'none';
+        singleBtn.style.display = 'none';
+        doubleBtn.style.display = 'none';
+        modeBtn.style.display = 'none';
+        // check player dead status
+        const p1Dead = this.entities.player1.remainingLives <= 0;
+        const p2Dead = this.gameMode === 'double' ? this.entities.player2.remainingLives <= 0 : true;
 
         if (p1Dead && p2Dead) {
             this.showWinner();
@@ -252,8 +281,7 @@ export class Game {
             startBtn.textContent = 'Next Round';
             console.log("A round ended. Preparing next round...");
         }
-        //reset players back, and take start button back
-        this.resetPlayers();
+
         this.entities.levelUp();
     }
 
