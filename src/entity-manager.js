@@ -106,6 +106,11 @@ export class EntityManager {
     }
     updateItemCollision() {
         const players = [this.player1, this.player2];
+        // when someone hurts, both players can't get score from carrots.
+        if (this.player1.isInvincible || this.player2.isInvincible ||
+            this.player1.state === 'hurt' || this.player2.state === 'hurt') {
+            return;
+        }
         for (const p of players) {
             this.items.forEach(item => {
                 if (item.active && this.checkCollision(p.getHitbox(), item.getHitbox())) {
