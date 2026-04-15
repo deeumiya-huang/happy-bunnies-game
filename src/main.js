@@ -179,15 +179,37 @@ window.addEventListener('resize', () => {
     resize();
 });
 
-fullscreenBtn.addEventListener('click', () => {
-    if (!document.fullscreenElement) {
-        gameContainer.requestFullscreen().catch(err => {
-            alert(`Error attempting to enable full-screen mode: ${err.message}`);
-        });
-        fullscreenBtn.textContent = "Exit Fullscreen";
-    } else {
-        document.exitFullscreen();
-        fullscreenBtn.textContent = "Go Fullscreen";
+fullscreenBtn.addEventListener('click', async () => {
+    try {
+        if (!document.fullscreenElement) {
+            // Enter fullscreen mode for the game container
+            await gameContainer.requestFullscreen();
+
+            // Attempt to lock screen orientation to landscape
+            // ps. Some browsers require the page to be in fullscreen to lock orientation
+            if (screen.orientation?.lock) {
+                await screen.orientation.lock('landscape').catch(err => {
+                    console.log("Orientation lock failed (device might not support it):", err);
+                });
+            }
+
+            fullscreenBtn.textContent = "Exit Fullscreen";
+        } else {
+            // 3. Exit fullscreen mode
+            if (screen.orientation?.unlock) {
+                screen.orientation.unlock(); // Unlock the orientation
+            }
+            await document.exitFullscreen();
+            fullscreenBtn.textContent = "Go Fullscreen";
+        }
+    } catch (err) { // check which kind of error happened
+        if (err.name === 'NotAllowedError') {
+            console.error("User denied permissions or didn't click the button.");
+        } else if (err.name === 'TypeError') {
+            console.error("The browser doesn't support this feature.");
+        } else {
+            console.error(`An unexpected error occurred: ${err.message}`);
+        }
     }
 });
 // listen for fullscreen change events (updates button text when Esc is pressed).
