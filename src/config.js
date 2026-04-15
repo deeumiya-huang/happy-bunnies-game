@@ -5,7 +5,7 @@ export const bgCtx = bgCanvas.getContext('2d');
 
 export const GAME_SETTINGS = {
     gravity: 0.4,
-    groundLevel: 125
+    groundRatio: 0.18
 };
 
 export const POOL_SIZE = 10;

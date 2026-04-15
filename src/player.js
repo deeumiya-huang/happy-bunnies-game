@@ -1,4 +1,4 @@
-import { ctx } from "./config.js";
+import {ctx, GAME_SETTINGS} from "./config.js";
 import { Entity } from "./entity.js";
 import { loadedAssets } from "./asset-loader.js";
 
@@ -106,7 +106,7 @@ export class Player extends Entity{
         this.y += this.dy;
 
         // ground collision detection
-        const groundY = ctx.canvas.height - this.height - this.ground;
+        const groundY = ctx.canvas.height - this.height - ctx.canvas.height * GAME_SETTINGS.groundRatio;
 
         if (this.y >= groundY) {
             this.onGround = true;

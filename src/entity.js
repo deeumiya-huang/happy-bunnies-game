@@ -9,7 +9,6 @@ export class Entity{
         this.speed = speed;
         this.dx = 0;
         this.dy = 0;
-        this.ground = GAME_SETTINGS.groundLevel;
         this.gravity = GAME_SETTINGS.gravity;
         this.padding = 6; //change hitbox size
         this.isHit = false;

@@ -1,4 +1,4 @@
-import {ctx} from "./config.js";
+import {ctx, GAME_SETTINGS} from "./config.js";
 import {Entity} from "./entity.js";
 import {loadedAssets} from "./asset-loader.js";
 
@@ -24,10 +24,11 @@ class Enemy extends Entity{
 export class GroundEnemy extends Enemy {
     constructor(speed) {
         super(speed);
-        this.y = ctx.canvas.height - this.height - this.ground;
     }
     draw(){
         if(!this.active){return;}
+        this.y = ctx.canvas.height - this.height - ctx.canvas.height * GAME_SETTINGS.groundRatio;
+
         this.updateMoveAnimation()
         let spriteName;
         if (this.moveFrame === 1) {
@@ -49,8 +50,8 @@ export class SkyEnemy extends Enemy {
         super(speed);
         this.width = 60;
         this.height = 30;
-        this.baseY = 350;
-        this.y = ctx.canvas.height - this.height - this.baseY;
+        this.baseY = 350; // default
+        // this.y = ctx.canvas.height - this.height - this.baseY;
         this.amplitude = 30;
         this.angle = 0;
         this.angleSpeed = 0.05;
@@ -70,6 +71,7 @@ export class SkyEnemy extends Enemy {
     }
     update() {
         super.update();
+        this.baseY = ctx.canvas.height * GAME_SETTINGS.groundRatio * 2.5;
         this.angle += this.angleSpeed;
         this.y = this.baseY + Math.sin(this.angle)* this.amplitude;
     }
