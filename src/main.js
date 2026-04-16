@@ -179,7 +179,8 @@ window.addEventListener('resize', () => {
     resize();
 });
 
-fullscreenBtn.addEventListener('click', async () => {
+fullscreenBtn.addEventListener('click', async (e) => {
+    e.currentTarget.blur();
     try {
         if (!document.fullscreenElement) {
             // Enter fullscreen mode for the game container

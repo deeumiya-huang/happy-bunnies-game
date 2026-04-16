@@ -25,7 +25,7 @@ export class Game {
     setupInput(onStart, onPause) {
         window.addEventListener('keydown', (e) => {
             // List of keys that trigger page scrolling
-            const keysToBlock = ["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+            const keysToBlock = ["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Enter"];
             this.keys[e.code] = true;
             if (this.isRunning && keysToBlock.includes(e.code)) {
                 // Prevent the default browser scrolling behavior when playing game
