@@ -415,7 +415,7 @@ nav li::before {
     }
     #mobile-controls {
         position: absolute;
-        bottom: 20px;
+        bottom: 80px;
         left: 0;
         width: 100%;
         z-index: 4;
