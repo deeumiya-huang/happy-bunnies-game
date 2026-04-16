@@ -120,9 +120,28 @@ nav li::before {
 
 #fullscreen-btn {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
+    top: 0;
+    right: 0;
     z-index: 3;
+    width: 60px;
+    height: 60px;
+    background: transparent;
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    -webkit-tap-highlight-color: transparent; /* Remove the default tap highlight color on mobile */
+    transition: transform 0.1s, background 0.1s;
+}
+#fullscreen-btn:active {
+    transform: scale(0.9);
+}
+
+#fullscreen-btn svg {
+    width: 30px;
+    height: 30px;
 }
 .game-items {
     position: absolute;
@@ -364,7 +383,7 @@ nav li::before {
     display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 768px), (orientation: landscape) and (max-device-width: 932px) {
     .header-container {
         padding: 10px;
         grid-template-columns: 1fr;
@@ -396,12 +415,44 @@ nav li::before {
     }
     #mobile-controls {
         position: absolute;
-        bottom: 50px;
-        left: 20px;
-        z-index: 3;
+        bottom: 20px;
+        left: 0;
+        width: 100%;
+        z-index: 4;
         display: flex;
         justify-content: space-between;
-        padding: 10px;
-        background: rgba(0,0,0,0.1);
+        padding: 0 30px;
+        pointer-events: none; /*Prevent the container from blocking interactions with the Canvas */
+    }
+
+    .btn-mobile {
+        pointer-events: auto; /* Re-enable interactions for the buttons */
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.3);
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 50%; /* round button */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        outline: none;
+        -webkit-tap-highlight-color: transparent; /* Remove the default tap highlight color on mobile */
+        transition: transform 0.1s, background 0.1s;
+    }
+
+    .btn-mobile:active {
+        transform: scale(0.9);
+        background: rgba(255, 255, 255, 0.6);
+    }
+
+    .btn-mobile svg {
+        width: 30px;
+        height: 30px;
+        fill: white; /* arrow color */
+    }
+
+    .move-btns {
+        display: flex;
+        gap: 20px;
     }
 }

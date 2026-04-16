@@ -194,14 +194,14 @@ fullscreenBtn.addEventListener('click', async (e) => {
                 });
             }
 
-            fullscreenBtn.textContent = "Exit Fullscreen";
+            fullscreenBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M14 10V4h2v2.59l3.29-3.29l1.41 1.41L17.41 8H20v2zM4 10V8h2.59l-3.3-3.29l1.42-1.42L8 6.59V4h2v6zm16 4v2h-2.59l3.29 3.29l-1.41 1.41L16 17.41V20h-2v-6zm-10 0v6H8v-2.59l-3.29 3.3l-1.42-1.42L6.59 16H4v-2z"/></svg>`;
         } else {
             // 3. Exit fullscreen mode
             if (screen.orientation?.unlock) {
                 screen.orientation.unlock(); // Unlock the orientation
             }
             await document.exitFullscreen();
-            fullscreenBtn.textContent = "Go Fullscreen";
+            fullscreenBtn.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="square" stroke-width="2" d="M5.884 5.884L9 9m0-4H5v4m.884 9.116L9 15m-4 0v4h4m9.116-13.116L15 9m0-4h4v4m-.884 9.116L15 15m4 0v4h-4"/></svg>`;
         }
     } catch (err) { // check which kind of error happened
         if (err.name === 'NotAllowedError') {
@@ -216,7 +216,7 @@ fullscreenBtn.addEventListener('click', async (e) => {
 // listen for fullscreen change events (updates button text when Esc is pressed).
 document.addEventListener('fullscreenchange', () => {
     if (!document.fullscreenElement) {
-        fullscreenBtn.textContent = "Go Fullscreen";
+        fullscreenBtn.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="square" stroke-width="2" d="M5.884 5.884L9 9m0-4H5v4m.884 9.116L9 15m-4 0v4h4m9.116-13.116L15 9m0-4h4v4m-.884 9.116L15 15m4 0v4h-4"/></svg>`;
         // trigger resize to ensure canvas dimensions are correct after exiting fullscreen.
         resize();
     }

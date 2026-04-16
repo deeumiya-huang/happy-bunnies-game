@@ -31,14 +31,22 @@
         <div class="subcontainer">
             <img id="left-bunny" src="src/assets/bunny1_stand.png" alt="left bunny">
             <section id="game-container">
-                <button class="btn" id="fullscreen-btn">Go Fullscreen</button>
+                <button id="fullscreen-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="square" stroke-width="2" d="M5.884 5.884L9 9m0-4H5v4m.884 9.116L9 15m-4 0v4h4m9.116-13.116L15 9m0-4h4v4m-.884 9.116L15 15m4 0v4h-4"/></svg>
+                </button>
                 <div id="mobile-controls">
                     <div class="move-btns">
-                        <button class="btn-mobile" id="btn-left">左</button>
-                        <button class="btn-mobile" id="btn-right">右</button>
+                        <button class="btn-mobile" id="btn-left">
+                            <svg viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7v14z"/></svg>
+                        </button>
+                        <button class="btn-mobile" id="btn-right">
+                            <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7V5z"/></svg>
+                        </button>
                     </div>
                     <div class="action-btns">
-                        <button class="btn-mobile" id="btn-jump">跳</button>
+                        <button class="btn-mobile" id="btn-jump">
+                            <svg viewBox="0 0 24 24"><path d="M12 8l-7 7h14l-7-7z"/></svg>
+                        </button>
                     </div>
                 </div>
                 <div class="canvas-wrapper">
