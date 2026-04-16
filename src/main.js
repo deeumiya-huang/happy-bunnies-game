@@ -50,26 +50,32 @@ function setupMobileControls() {
 
     btnLeft.addEventListener('touchstart', (e) => {
         e.preventDefault(); // intercept the browser's default behavior
+        btnLeft.classList.add('is-active');
         game.keys['keyA'] = true;
     }, {passive: false})
     btnLeft.addEventListener('touchend', () => {
+        btnLeft.classList.remove('is-active');
         game.keys['KeyA'] = false;
     });
 
     btnRight.addEventListener('touchstart', (e) => {
         e.preventDefault();
+        btnRight.classList.add('is-active');
         game.keys['KeyD'] = true;
     });
     btnRight.addEventListener('touchend', () => {
         game.keys['KeyD'] = false;
+        btnRight.classList.remove('is-active');
     });
 
     btnJump.addEventListener('touchstart', (e) => {
         e.preventDefault();
+        btnJump.classList.add('is-active');
         game.keys['KeyW'] = true;
     });
     btnJump.addEventListener('touchend', () => {
         game.keys['KeyW'] = false;
+        btnJump.classList.remove('is-active');
     });
 }
 function displayInitialHighScore() {
