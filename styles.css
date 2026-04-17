@@ -369,7 +369,14 @@ nav li::before {
     color: #a2d178;
     text-decoration: underline;
 }
-
+.github-link-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.github-link-footer svg {
+    fill: white;
+}
 /* Footer Bottom Bar */
 .footer-bottom {
     text-align: center;
