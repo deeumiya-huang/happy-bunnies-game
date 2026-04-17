@@ -44,12 +44,13 @@
 * **Game Physics**: Implement collision detection, gravity constants, and "hang-time" jumping mechanics for a smooth feel.
 * **Difficulty**: A level-up system that change enemy and item speeds as a new round begin.
 * **Efficient Rendering**: Utilizes Sprite Sheet animations and layered background rendering to improve efficiency.
+* **Modular Design**: Implement the Separation of Concerns (SoC) by decoupling game logic from UI controllers.
 
 ---
 
-## 🧠 Technical Key Learnings
+## 🧠 Key Learnings
 
-Building this game from scratch let me learn a lot from it. Here are the core things I gained:
+Building this game from scratch let me learn a lot from it. My primary learnings involve:
 
 ### 1. Performance: Canvas vs. DOM
 Initially, I considered using DOM elements for game objects, but I quickly pivoted to the **HTML5 Canvas API**. This shift allowed for direct pixel rendering, which is far more efficient for games with many moving parts, ensuring a consistent 60FPS experience.
@@ -83,7 +84,6 @@ The project follows a modular structure for better maintainability:
 - `AssetLoader.js`: Ensures all assets are ready before the game starts.
 - `Config.js`: Centralized game constants and dynamic ground scaling.
 
-
 ---
 
 ## 🚀 Future Enhancements
@@ -91,5 +91,16 @@ The project follows a modular structure for better maintainability:
 - **Mobile UX**: Improve virtual joystick layout and adjust game configuration details. 
 - **Difficulty**: Implement more enemy patterns (different movement).
 - **Backend**: Replace LocalStorage with a REST API for global leaderboards.
+
+---
+
+## 📜 Credits & Acknowledgments
+
+* **Game Assets**: All visual assets (characters and background elements) are provided by [Kenney](https://www.kenney.nl/).
+* **Asset Packs Used**:
+  * [Jumper Pack](https://www.kenney.nl/assets/jumper-pack)
+  * [Background Elements Remastered](https://www.kenney.nl/assets/background-elements-remastered)
+* **License**: [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/)
+
 ---
 **Author**: Deeumiya Huang | Waikato IT Student
