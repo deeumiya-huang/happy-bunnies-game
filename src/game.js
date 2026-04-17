@@ -1,10 +1,10 @@
 import { ctx, canvas, bgCtx, bgCanvas } from "./config.js";
 import { EntityManager } from "./entity-manager.js";
-import {gameBoard, gameHint, pauseBtn, startBtn, modeBtn, selectMode, singleBtn, doubleBtn} from "./main.js";
+import {gameBoard, gameHint, pauseBtn, startBtn, modeBtn, selectMode, singleBtn, dualBtn} from "./main.js";
 
 export class Game {
     constructor() {
-        this.gameMode = 'double'; //can choose single or double
+        this.gameMode = 'dual'; //can choose single or dual
         this.isReady = false;  // Whether resources are fully loaded
         this.isRunning = false;
         this.isStarted = false; // Whether the game has been started via click
@@ -53,7 +53,7 @@ export class Game {
 
         const p1Dead = this.entities.player1.remainingLives <= 0;
         // in single mode, p2Dead is always true
-        const p2Dead = this.gameMode === 'double' ? this.entities.player2.remainingLives <= 0 : true;
+        const p2Dead = this.gameMode === 'dual' ? this.entities.player2.remainingLives <= 0 : true;
         if (p1Dead && p2Dead) {
             this.resetStatus();
         }
@@ -61,7 +61,7 @@ export class Game {
         this.isRunning = true;
         // only player remaining lives is active
         this.entities.player1.active = this.entities.player1.remainingLives > 0;
-        if (this.gameMode === 'double') {
+        if (this.gameMode === 'dual') {
             this.entities.player2.active = this.entities.player2.remainingLives > 0;
         } else {
             this.entities.player2.active = false; // in single mode, p2.active is always false
@@ -113,7 +113,7 @@ export class Game {
         this.drawText.style.display = 'none';
         selectMode.style.display = 'block';
         singleBtn.style.display = 'block';
-        doubleBtn.style.display = 'block';
+        dualBtn.style.display = 'block';
     }
 
     togglePause() {
@@ -195,7 +195,7 @@ export class Game {
             this.drawText.textContent = `Game Over! Score: ${this.entities.player1.score}`;
             this.drawText.style.display = 'block';
         } else {
-            // original double mode logic.
+            // original dual mode logic.
             const loser = this.findLoser();
             if (!loser) {
                 this.drawText.style.display = 'block';
@@ -264,11 +264,11 @@ export class Game {
         pauseBtn.innerText = "Pause";
         selectMode.style.display = 'none';
         singleBtn.style.display = 'none';
-        doubleBtn.style.display = 'none';
+        dualBtn.style.display = 'none';
         modeBtn.style.display = 'none';
         // check player dead status
         const p1Dead = this.entities.player1.remainingLives <= 0;
-        const p2Dead = this.gameMode === 'double' ? this.entities.player2.remainingLives <= 0 : true;
+        const p2Dead = this.gameMode === 'dual' ? this.entities.player2.remainingLives <= 0 : true;
 
         if (p1Dead && p2Dead) {
             this.showWinner();

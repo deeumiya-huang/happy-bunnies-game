@@ -4,7 +4,7 @@ import { Game } from "./game.js";
 
 const game = new Game();
 export const singleBtn = document.querySelector('#single-mode');
-export const doubleBtn = document.querySelector('#double-mode');
+export const dualBtn = document.querySelector('#dual-mode');
 export const selectMode = document.querySelector('#select-mode');
 export const startBtn = document.querySelector('#game-start');
 export const pauseBtn = document.querySelector('#game-pause');
@@ -36,9 +36,9 @@ function handleMobileRestriction() {
         modeName.textContent = 'Single Mode (Mobile Optimized)';
         player2Display.style.visibility = 'hidden';
 
-        // hide double mode btn
+        // hide dual mode btn
         modeBtn.style.display = 'none';
-        doubleBtn.style.display = 'none';
+        dualBtn.style.display = 'none';
 
         selectMode.textContent = "Mobile version: Single Player only";
     }
@@ -88,7 +88,7 @@ function displayInitialHighScore() {
 function setUpDisplay() {
     modeName.style.display = 'block';
     singleBtn.style.display = 'none';
-    doubleBtn.style.display = 'none';
+    dualBtn.style.display = 'none';
     selectMode.style.display = 'none';
     modeName.style.display = 'block';
     gameHint.style.display = 'block';
@@ -118,9 +118,9 @@ async function boot() {
         setUpDisplay();
     })
 
-    doubleBtn.addEventListener('click', () => {
-        game.gameMode = 'double';
-        modeName.textContent = 'Double Mode';
+    dualBtn.addEventListener('click', () => {
+        game.gameMode = 'dual';
+        modeName.textContent = 'Dual Mode';
         player2Display.style.visibility = 'visible';
         setUpDisplay();
     })
@@ -148,8 +148,8 @@ async function boot() {
         gameHint.style.display = 'block';
 
         if (game.gameMode === 'single') {
-            game.gameMode = 'double';
-            modeName.textContent = 'Double Mode';
+            game.gameMode = 'dual';
+            modeName.textContent = 'Dual Mode';
             player2Display.style.visibility = 'visible';
         } else {
             game.gameMode = 'single';
