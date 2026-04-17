@@ -132,9 +132,8 @@ export class Game {
     resetPlayers() {
         const players = [this.entities.player1, this.entities.player2];
 
-        // P1(300,300), P2(400,300)
         const startPositions = [
-            { x: 300, y: -150 },
+            { x: 200, y: -150 },
             { x: 400, y: -150 }
         ];
 

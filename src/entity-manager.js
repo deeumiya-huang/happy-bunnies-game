@@ -7,7 +7,7 @@ export class EntityManager {
     constructor(level, game) {
         this.game = game;
         this.isSmallScreen = window.innerWidth < 800; // delay spawning enemy time on mobile prevent too crowded
-        this.spawnDelayMultiplier = this.isSmallScreen ? 2.0 : 1.0;
+        this.spawnDelayMultiplier = this.isSmallScreen ? 3.0 : 1.0;
         this.player1 = null;
         this.player2 = null;
         this.groundEnemies = [];
@@ -26,7 +26,7 @@ export class EntityManager {
     }
 
     setup() {
-        this.player1 = new Player(1,300, 300, this.playerSpeed, {left: 'KeyA', right: 'KeyD', jump: 'KeyW'});
+        this.player1 = new Player(1,200, 300, this.playerSpeed, {left: 'KeyA', right: 'KeyD', jump: 'KeyW'});
         this.player2 = new Player(2,400, 300, this.playerSpeed, {left: 'ArrowLeft', right: 'ArrowRight', jump: 'ArrowUp'});
         for (let i = 0; i < POOL_SIZE; i++) {
             this.groundEnemies.push(new GroundEnemy(this.enemySpeed));
