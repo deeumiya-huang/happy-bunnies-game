@@ -6,6 +6,8 @@ import { Item } from "./item.js";
 export class EntityManager {
     constructor(level, game) {
         this.game = game;
+        this.isSmallScreen = window.innerWidth < 800; // delay spawning enemy time on mobile prevent too crowded
+        this.spawnDelayMultiplier = this.isSmallScreen ? 2.0 : 1.0;
         this.player1 = null;
         this.player2 = null;
         this.groundEnemies = [];
@@ -178,8 +180,10 @@ export class EntityManager {
     startSpawningGroundEnemy() {
         clearTimeout(this.spawnTimers.ground);
         if (!this.game.isRunning){ return;}
-        //2000 - 4000 ms
-        const randomTime = Math.floor(Math.random() * 2000) + 2000;
+        //2000 - 4000 ms on computer
+        const minTime = 2000 * this.spawnDelayMultiplier;
+        const range = 2000 * this.spawnDelayMultiplier;
+        const randomTime = Math.floor(Math.random() *range) + minTime;
         this.spawnTimers.ground = setTimeout(() => {
             this.spawnGroundEnemy();
             this.startSpawningGroundEnemy(); // recursive call for the next random interval
@@ -188,8 +192,9 @@ export class EntityManager {
     startSpawningSkyEnemy() {
         clearTimeout(this.spawnTimers.sky);
         if (!this.game.isRunning){ return;}
-        const randomTime = Math.floor(Math.random() * 2000) + 2000;
-        this.spawnTimers.sky = setTimeout(() => {
+        const minTime = 2000 * this.spawnDelayMultiplier;
+        const range = 2000 * this.spawnDelayMultiplier;
+        const randomTime = Math.floor(Math.random() *range) + minTime;        this.spawnTimers.sky = setTimeout(() => {
             this.spawnSkyEnemy();
             this.startSpawningSkyEnemy(); // recursive call for the next random interval
         }, randomTime);
