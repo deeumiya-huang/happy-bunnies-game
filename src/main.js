@@ -51,7 +51,7 @@ function setupMobileControls() {
     btnLeft.addEventListener('touchstart', (e) => {
         e.preventDefault(); // intercept the browser's default behavior
         btnLeft.classList.add('is-active');
-        game.keys['keyA'] = true;
+        game.keys['KeyA'] = true;
     }, {passive: false})
     btnLeft.addEventListener('touchend', () => {
         btnLeft.classList.remove('is-active');
