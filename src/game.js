@@ -40,7 +40,6 @@ export class Game {
         window.addEventListener('keyup', (e) => {
             this.keys[e.code] = false;
         })
-
     }
 
     start() {
@@ -82,7 +81,10 @@ export class Game {
         requestAnimationFrame((time) => this.loop(time));
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        this.entities.update(this.keys);
+        if (this.isRunning) {
+            this.entities.update(this.keys);
+        }
+
         this.entities.draw();
     }
 
