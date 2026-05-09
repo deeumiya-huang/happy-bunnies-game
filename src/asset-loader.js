@@ -1,4 +1,6 @@
- export const Assets = {
+import {logger} from "./Logger.js";
+
+export const Assets = {
     BACKGROUND: './src/assets/backgroundColorForest.png',
     SPRITE_SHEET: './src/assets/spritesheet_jumper.png',
     SPRITE_SHEET_XML: './src/assets/spritesheet_jumper.xml'
@@ -9,12 +11,12 @@ export let loadedAssets = {}; // put successfully loaded images
      return new Promise((resolve, reject) =>{
          const img = new Image();
          img.addEventListener('load', () => {
-             console.log(`Image loaded successfully: ${src}`);//delete later
+             logger.info(`Image loaded successfully: ${src}`);
              resolve(img);
          })
          img.addEventListener('error', () => {
              const error = new Error(`Image loaded failed: ${src}`);
-             console.error(`Image loaded failed: ${src}`, error);
+             logger.error(`Image loaded failed: ${src}`, error);
              reject(error)
          })
          img.src = src;
@@ -49,9 +51,9 @@ export let loadedAssets = {}; // put successfully loaded images
          loadedAssets.bgImg = bgImg;
          loadedAssets.spriteSheet = spriteSheet;
          loadedAssets.atlas = parseAtlasXML(xmlString);
-         console.log(`all images and xml files loaded successfully, ready to start game!`);
+         logger.info(`all images and xml files loaded successfully, ready to start game!`);
      } catch (error) {
-         console.error(`game initialize failed:`, error);
+         logger.error(`game initialize failed:`, error);
          alert(`please check image and xml file paths.`)
      }
  }

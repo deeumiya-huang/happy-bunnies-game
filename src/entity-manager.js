@@ -2,6 +2,7 @@ import {canvas, POOL_SIZE} from "./config.js";
 import { Player } from "./player.js";
 import { GroundEnemy, SkyEnemy } from "./enemy.js";
 import { Item } from "./item.js";
+import {logger} from "./Logger.js";
 
 export class EntityManager {
     constructor(level, game) {
@@ -64,7 +65,7 @@ export class EntityManager {
             item.speed = this.itemSpeed;
             item.dy = this.itemSpeed;
         }))
-        console.log(`Level Up! Current Level: ${this.level}, PlayerSpeed: ${this.playerSpeed}, EnemySpeed: ${this.enemySpeed}, ItemSpeed: ${this.itemSpeed}`);
+        logger.info(`Level Up! Current Level: ${this.level}, PlayerSpeed: ${this.playerSpeed}, EnemySpeed: ${this.enemySpeed}, ItemSpeed: ${this.itemSpeed}`);
     }
     resetDifficulty() {
         this.level = 1; // back to default value

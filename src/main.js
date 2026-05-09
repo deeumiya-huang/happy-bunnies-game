@@ -1,6 +1,7 @@
 import {canvas, bgCanvas} from "./config.js";
 import { loadedAssets, initAssets } from "./asset-loader.js";
 import { Game } from "./game.js";
+import {logger} from "./Logger.js";
 
 const game = new Game();
 export const singleBtn = document.querySelector('#single-mode');
@@ -16,6 +17,7 @@ const player2Display = document.querySelector('#player2-wrapper');
 
 const fullscreenBtn = document.querySelector('#fullscreen-btn');
 const gameContainer = document.querySelector('#game-container');
+
 // drawing background is included in resize function, consider carefully when modify resize function
 function resize() {
     const {width, height} = bgCanvas.parentElement.getBoundingClientRect();
@@ -107,7 +109,7 @@ async function boot() {
         () => pauseBtn.click()
     );
 
-    console.log(`game initialize!`);
+    logger.info(`game initialize!`)
 
     setupMobileControls();
 
@@ -131,7 +133,7 @@ async function boot() {
         gameHint.style.display = 'block';
         pauseBtn.style.display = 'inline-block';
         game.start();
-        console.log("Game Started!");
+        logger.info("Game Started!");
     });
 
     pauseBtn.addEventListener('click', () => {
@@ -196,7 +198,7 @@ fullscreenBtn.addEventListener('click', async (e) => {
             // ps. Some browsers require the page to be in fullscreen to lock orientation
             if (screen.orientation?.lock) {
                 await screen.orientation.lock('landscape').catch(err => {
-                    console.log("Orientation lock failed (device might not support it):", err);
+                    logger.error("Orientation lock failed (device might not support it):", err);
                 });
             }
 
@@ -211,11 +213,11 @@ fullscreenBtn.addEventListener('click', async (e) => {
         }
     } catch (err) { // check which kind of error happened
         if (err.name === 'NotAllowedError') {
-            console.error("User denied permissions or didn't click the button.");
+            logger.error("User denied permissions or didn't click the button.");
         } else if (err.name === 'TypeError') {
-            console.error("The browser doesn't support this feature.");
+            logger.error("The browser doesn't support this feature.");
         } else {
-            console.error(`An unexpected error occurred: ${err.message}`);
+            logger.error(`An unexpected error occurred: ${err.message}`);
         }
     }
 });

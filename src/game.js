@@ -1,6 +1,7 @@
 import { ctx, canvas, bgCtx, bgCanvas } from "./config.js";
 import { EntityManager } from "./entity-manager.js";
 import {gameBoard, gameHint, pauseBtn, startBtn, modeBtn, selectMode, singleBtn, dualBtn} from "./main.js";
+import {logger} from "./Logger.js";
 
 export class Game {
     constructor() {
@@ -158,7 +159,7 @@ export class Game {
         this.resetLife();
         this.resetScore();
         this.entities.resetDifficulty();
-        console.log(`Reset Level! Current Level: ${this.entities.level}, PlayerSpeed: ${this.entities.playerSpeed}, EnemySpeed: ${this.entities.enemySpeed}, ItemSpeed: ${this.entities.itemSpeed}`);
+        logger.info(`Reset Level! Current Level: ${this.entities.level}, PlayerSpeed: ${this.entities.playerSpeed}, EnemySpeed: ${this.entities.enemySpeed}, ItemSpeed: ${this.entities.itemSpeed}`);
     }
     resetScore() {
         this.entities.player1.score = 0;
@@ -238,7 +239,7 @@ export class Game {
 
         if (currentScore > savedHighScore) {
             localStorage.setItem('bunny_high_score', currentScore);
-            console.log(`new record! highest score：${currentScore}`);
+            logger.info(`new record! highest score：${currentScore}`);
             return currentScore;
         }
         return savedHighScore;
@@ -272,13 +273,13 @@ export class Game {
 
         if (p1Dead && p2Dead) {
             this.showWinner();
-            console.log("All players dead. Final Result!");
+            logger.info("All players dead. Final Result!");
         } else {
             gameHint.style.display = 'block';
             this.winnerImg.style.display = 'none';
             this.winnerText.style.display = 'none';
             startBtn.textContent = 'Next Round';
-            console.log("A round ended. Preparing next round...");
+            logger.info("A round ended. Preparing next round...");
         }
 
         this.entities.levelUp();

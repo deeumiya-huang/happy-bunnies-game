@@ -8,6 +8,7 @@ export class Item extends Entity{
         this.width = 40;
         this.height = 40;
     }
+
     draw(){
         if(!this.active){return;}
         const s = loadedAssets.atlas[`carrot_gold.png`];
