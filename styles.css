@@ -10,6 +10,11 @@ body {
     background-color: #f4f4f4;
     color: #333;
 }
+
+button:focus-visible {
+    outline: none;
+}
+
 .header-container {
     background-color: #ff8c32;
     color: #efebe9;
