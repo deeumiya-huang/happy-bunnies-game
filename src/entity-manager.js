@@ -195,7 +195,8 @@ export class EntityManager {
         if (!this.game.isRunning){ return;}
         const minTime = 2000 * this.spawnDelayMultiplier;
         const range = 2000 * this.spawnDelayMultiplier;
-        const randomTime = Math.floor(Math.random() *range) + minTime;        this.spawnTimers.sky = setTimeout(() => {
+        const randomTime = Math.floor(Math.random() *range) + minTime;
+        this.spawnTimers.sky = setTimeout(() => {
             this.spawnSkyEnemy();
             this.startSpawningSkyEnemy(); // recursive call for the next random interval
         }, randomTime);
