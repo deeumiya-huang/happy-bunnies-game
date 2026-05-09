@@ -10,6 +10,7 @@ export let loadedAssets = {}; // put successfully loaded images
  function loadImage(src){
      return new Promise((resolve, reject) =>{
          const img = new Image();
+         img.crossOrigin = "anonymous"; // Allow cross-origin usage to avoid "tainted canvas" errors when reading pixel data
          img.addEventListener('load', () => {
              logger.info(`Image loaded successfully: ${src}`);
              resolve(img);
