@@ -55,6 +55,17 @@ export class Player extends Entity{
             this.jumpCount++;
         }
     }
+    #updateInvincibilityCounter() {
+        if (this.isInvincible) {
+            this.invincibilityTimer--;
+            this.alpha = 0.7;
+
+            if (this.invincibilityTimer <= 0) {
+                this.isInvincible = false;
+                this.alpha = 1;
+            }
+        }
+    }
     update(keys) {
         if(!this.active){return;}
         this.dx = 0; // reset dx each frame
@@ -72,15 +83,8 @@ export class Player extends Entity{
             }
             return; // skip the movement logic so that player can fall off the screen
         }
-        if (this.isInvincible) {
-            this.invincibilityTimer--;
-            this.alpha = 0.7;
+        this.#updateInvincibilityCounter()
 
-            if (this.invincibilityTimer <= 0) {
-                this.isInvincible = false;
-                this.alpha = 1;
-            }
-        }
         if(keys[this.controls.left]){this.dx -= this.speed;}
         if(keys[this.controls.right]){this.dx += this.speed;}
         if(keys[this.controls.jump]){
